@@ -11,7 +11,7 @@ local function find_type(item)
     if dri[item] then return 'item' end
     if drf[item] then return 'fluid' end
     for prototype in pairs(defines.prototypes.item) do
-        if dr[prototype][item] then return prototype end
+        if dr[prototype] and dr[prototype][item] then return prototype end
     end
     return nil
 end

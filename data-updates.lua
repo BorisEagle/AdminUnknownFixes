@@ -1,0 +1,58 @@
+
+
+--angel mods
+require('prototypes/angels-mods/Data-Updates')
+
+--aai
+require('prototypes/aai/Data-updates')
+
+--bob mods
+require('prototypes/bobs-mods/Data-Updates')
+
+--madclown mods
+require('prototypes/madclowns-mods/data-updates')
+
+--omni mods
+--require('prototypes/omni-mods/Data-updates')
+
+--msp
+if mods['MoreSciencePacks-for1_1'] then
+	require('prototypes/msp/Data-updates')
+end
+
+--apm mods
+require('prototypes/apm-mods/Data-Updates')
+
+----------------------------------------------------
+-- MERGED FROM PyPPTBaA: Underground belt scaling
+----------------------------------------------------
+if mods['boblogistics'] then
+    local function set_underground_recipe(underground, belt, prev_underground, prev_belt)
+        if not data.raw['underground-belt'][underground] then return end
+        local dist = data.raw['underground-belt'][underground].max_distance + 1
+        local prev_dist = 0
+
+        if prev_underground and data.raw['underground-belt'][prev_underground] then
+            prev_dist = data.raw['underground-belt'][prev_underground].max_distance + 1
+            local recipe_data = data.raw.recipe[belt]
+            if recipe_data and recipe_data.results then
+                local belt_count = recipe_data.results[1] and recipe_data.results[1].amount or 1
+                for _, ing in pairs(recipe_data.ingredients or {}) do
+                    if ing.name ~= prev_belt then
+                        RECIPE(underground):remove_ingredient(ing.name)
+                            :add_ingredient{type = ing.type, name = ing.name, amount = ing.amount * prev_dist / belt_count}
+                    end
+                end
+            end
+        end
+
+        RECIPE(underground):remove_ingredient(belt):add_ingredient{type = "item", name = belt, amount = dist - prev_dist}
+    end
+
+    set_underground_recipe("bob-basic-underground-belt", "bob-basic-transport-belt", nil, nil)
+    set_underground_recipe("underground-belt", "transport-belt", "bob-basic-underground-belt", "bob-basic-transport-belt")
+    set_underground_recipe("fast-underground-belt", "fast-transport-belt", "underground-belt", "transport-belt")
+    set_underground_recipe("express-underground-belt", "express-transport-belt", "fast-underground-belt", "fast-transport-belt")
+    set_underground_recipe("bob-turbo-underground-belt", "bob-turbo-transport-belt", "express-underground-belt", "express-transport-belt")
+    set_underground_recipe("bob-ultimate-underground-belt", "bob-ultimate-transport-belt", "bob-turbo-underground-belt", "bob-turbo-transport-belt")
+end

@@ -1,0 +1,109 @@
+---------------------------------------------------------------------------------------------------
+Version: 2.0.0
+Date: 2026-03-30
+  Changes:
+    - Renamed mod to AdminUnknownFixes
+    - Updated to Factorio 2.0
+    - Merged PyPPTBaA (Pyanodons Post Processing Touched By an Angel) into this mod
+    - Merged bobsmodules4py (Bob's Modules 4 Pyanodons) into this mod
+    - Updated all Angel's mod references for 2.0 (angels- prefix on prototypes)
+    - Updated all Bob's mod references for 2.0 (bob- prefix on prototypes)
+    - Updated all Py mod references for 2.0 (pypostprocessing 3.x API)
+    - Replaced stdlib dependency with pypostprocessing built-in library
+    - Removed normal/expensive difficulty handling (removed in Factorio 2.0)
+    - Updated recipe format for 2.0 (no more shorthand ingredients/results)
+    - Updated module_specification to module_slots
+    - Updated emissions_per_minute format
+    - Updated global item replacer mappings for all 2.0 mod renames
+    - Added ingredient deduplicator (from PyPPTBaA)
+    - Added underground belt recipe scaling for Bob's logistics (from PyPPTBaA)
+    - Added Bob's modules tech/recipe/effect integration (from bobsmodules4py)
+---------------------------------------------------------------------------------------------------
+Version 1.2.35
+Date: 2024-9-12
+  Bugfixes:
+    - Made barrels fillable
+    - Made underground belts add Bob's Logistics underground modifier
+  Changes:
+    - Fixes for PyPPTBaA
+---------------------------------------------------------------------------------------------------
+Version 1.2.34
+Date: 2024-7-20
+  Bugfixes:
+    - Fixed crash when Angel's mods loaded after PyCoalTBaA
+---------------------------------------------------------------------------------------------------
+Version: 1.2.33
+Date: 2024-7-1
+  Changes:
+    - Balanced iron processing
+    - Merged Py's canisters and Bob's canisters
+  Bugfixes:
+    - Made barreling unlocked earlier, allowing vrauks to be crafted
+---------------------------------------------------------------------------------------------------
+Version 1.2.32
+Date: 2024-5-23
+  Bugfixes:
+    - Fixed crash with advanced fluid handeling
+    - Fixed crash when ferric chloride solution was removed
+---------------------------------------------------------------------------------------------------
+Version: 1.2.31
+Date: 2024-3-5
+  Bugfixes:
+    - Fixed that washing plants were uncraftable
+---------------------------------------------------------------------------------------------------
+Version: 1.2.30
+Date: 2024-1-28
+  Bugfixes:
+    - Fixed that aluminum ore didn't output the correct aluminium
+---------------------------------------------------------------------------------------------------
+Version: 1.2.29
+Date: 2024-1-27
+  Bugfixes:
+    - Fixed that wood didn't burn
+    - Changed Bob's boilers and engines to be more in-line with Py's
+---------------------------------------------------------------------------------------------------
+Version: 1.2.28
+Date: 2024-1-25
+  Changes:
+    - Added a plan
+    - Cleaned up some useless files
+  Bugfixes:
+    - Fixed crash when Angel's refining was not enabled
+---------------------------------------------------------------------------------------------------
+Version: 1.2.27
+Date: 2024-1-19
+  Changes:
+    - Removed filter inserters
+    - Added recipe  builder fallbacks
+    - Changed Angel's resin a bit
+    - Changed the Throvin bicycles a bit
+---------------------------------------------------------------------------------------------------
+Version: 1.2.26
+Date: 2023-11-21
+  Changes:
+    - Changed rocket fuel recipe
+    - Added steel
+  Bugfixes:
+    - Fixed crash with new Py update
+---------------------------------------------------------------------------------------------------
+Version: 1.2.25
+Date: 2023-11-7
+  Bugfixes:
+    - Fixed case sensitive crash for linux users
+---------------------------------------------------------------------------------------------------
+Version: 1.2.24
+Date: 2023-11-6
+  Changes:
+    - Did a lot of stuff, not going to mention it all here because I forget
+  Bugfixes:
+    - Fixed startup crashes with Amator Phasma
+  Compatibility:
+    - MSP Compat
+---------------------------------------------------------------------------------------------------
+Version: 1.2.23
+Date: 2023-10-7
+  Changes:
+    - Readded Productivity for farm modules
+    - Fixed bug where basic solder casting didn't exist
+    - Worked on PyBob
+    - Added incompatibilities with Nullius and Seablock

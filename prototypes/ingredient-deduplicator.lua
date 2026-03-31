@@ -1,22 +1,25 @@
 -- Ingredient Deduplicator (merged from PyPPTBaA)
 -- Removes duplicate ingredients from recipes after global item replacement
 
+local function find_item(name)
+    if data.raw.item[name] or data.raw.fluid[name] then return true end
+    for prototype in pairs(defines.prototypes.item) do
+        if data.raw[prototype] and data.raw[prototype][name] then return true end
+    end
+    return false
+end
+
 for _, recipe in pairs(data.raw.recipe) do
-    local inglist = {}
-    if recipe.ingredients ~= nil then
-        for idx, ing in pairs(recipe.ingredients) do
+    if recipe.ingredients then
+        local seen = {}
+        local clean = {}
+        for _, ing in pairs(recipe.ingredients) do
             local name = ing.name
-            if name ~= nil then
-                if data.raw.item[name] or data.raw.fluid[name] or data.raw.module[name] or data.raw.tool[name] or data.raw.ammo[name] then
-                    if not inglist[name] then
-                        inglist[name] = true
-                    else
-                        data.raw.recipe[recipe.name].ingredients[idx] = nil
-                    end
-                else
-                    data.raw.recipe[recipe.name].ingredients[idx] = nil
-                end
+            if name and find_item(name) and not seen[name] then
+                seen[name] = true
+                clean[#clean + 1] = ing
             end
         end
+        recipe.ingredients = clean
     end
 end

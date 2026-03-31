@@ -4,8 +4,8 @@
 	"factorio_version": "2.0",
 	"title": "AdminUnknownFixes",
 	"author": "KingArthur, Erkigmo, AdminUnknown",
-	"contact": "",
-	"homepage": "",
+	"contact": "jakegodding@gmail.com",
+	"homepage": "https://github.com/jakegodding/AdminUnknownFixes",
 	"description": "Bridge mod for Pyanodon + Angel's + Bob's mod compatibility. Merges duplicate items, fixes progression, and balances recipes across mod packs.",
 	"dependencies": [
 	"base >= 2.0.0",

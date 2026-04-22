@@ -1,12 +1,12 @@
 {
 	"name": "AdminUnknownFixes",
-	"version": "2.0.0",
+	"version": "2.0.2",
 	"factorio_version": "2.0",
 	"title": "AdminUnknownFixes",
 	"author": "KingArthur, Erkigmo, AdminUnknown",
 	"contact": "jakegodding@gmail.com",
 	"homepage": "https://github.com/jakegodding/AdminUnknownFixes",
-	"description": "Bridge mod for Pyanodon + Angel's + Bob's mod compatibility. Merges duplicate items, fixes progression, and balances recipes across mod packs.",
+	"description": "Bridge mod for Pyanodon + Angel's + Bob's mod compatibility. Merges duplicate items, fixes progression, and balances recipes across mod packs. If PyPostProcessing requires the deprecated mod pyppatba (Pyanodons Post Processing Touched By an Angel), install the bundled pyppatba-stub folder as a separate mod (see repository pyppatba-stub/).",
 	"dependencies": [
 	"base >= 2.0.0",
 	"pycoalprocessing >= 3.0.0",

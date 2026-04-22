@@ -12,7 +12,9 @@ if mods['angelsrefining'] then
     	},
     }:add_unlock('coal-processing-1')
 end
-if mods['angelsbioprocessing'] then
+if mods['angelsbioprocessing']
+    and data.raw.item['algae-green']
+    and data.raw.item['algae-brown'] then
 	RECIPE {
     	type = "recipe",
     	name = "coalgas-from-seaweed",

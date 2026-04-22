@@ -1,15 +1,23 @@
 if mods['bobelectronics'] then
     if mods['pyhightech'] then
-        data.raw.recipe['bob-silicon-wafer'].enabled = false
-        data.raw.recipe['bob-rubber'].enabled = false
-        data.raw.recipe['bob-rubber'].hidden = true
+        if data.raw.recipe['bob-silicon-wafer'] then
+            data.raw.recipe['bob-silicon-wafer'].enabled = false
+        end
+        if data.raw.recipe['bob-rubber'] then
+            data.raw.recipe['bob-rubber'].enabled = false
+            data.raw.recipe['bob-rubber'].hidden = true
+        end
         
         if mods["angelsindustries"] and not settings.startup["angels-enable-components"].value then
 
-            data.raw.recipe['bob-wooden-board'].enabled = false
-            data.raw.recipe['bob-basic-circuit-board'].enabled = false
-            data.raw.recipe['bob-wooden-board'].hidden = true
-            data.raw.recipe['bob-basic-circuit-board'].enabled = false
+            if data.raw.recipe['bob-wooden-board'] then
+                data.raw.recipe['bob-wooden-board'].enabled = false
+                data.raw.recipe['bob-wooden-board'].hidden = true
+            end
+            if data.raw.recipe['bob-basic-circuit-board'] then
+                data.raw.recipe['bob-basic-circuit-board'].enabled = false
+                data.raw.recipe['bob-basic-circuit-board'].hidden = true
+            end
 
 
             RECIPE('offshore-pump'):remove_ingredient('bob-basic-circuit-board')
@@ -41,7 +49,7 @@ if mods['boblogistics'] then
     data.raw.recipe['underground-belt'].enabled = false
     RECIPE('underground-belt'):add_unlock('logistics')
 
-    RECIPE('bob-repair-pack-2'):remove_ingredient("iron-gear-wheel"):add_ingredient("repair-pack")
+    RECIPE('bob-repair-pack-2'):remove_ingredient("iron-gear-wheel"):add_ingredient({type = "item", name = "repair-pack", amount = 1})
 
     if settings.startup['bobmods-logistics-inserteroverhaul'].value then
         fun.ingredient_replace('rare-earth-mine','fast-inserter','red-inserter')
@@ -54,11 +62,11 @@ if mods['boblogistics'] then
     end
     if mods['pyhightech'] then
       --more robot stuff
-      RECIPE('bob-repair-pack-2'):remove_ingredient("electronic-circuit"):add_ingredient("pcb1")
+      RECIPE('bob-repair-pack-2'):remove_ingredient("electronic-circuit"):add_ingredient({type = "item", name = "pcb1", amount = 1})
       RECIPE('bob-robot-brain-construction'):remove_ingredient("advanced-circuit")
       RECIPE('bob-robot-brain-construction'):add_ingredient({type = "item", name = "plastic-bar", amount = 5})
-      RECIPE('py-construction-robot-mk01'):add_ingredient("bob-robot-brain-construction")
-      RECIPE('py-construction-robot-mk01'):add_ingredient("bob-robot-tool-construction")
+      RECIPE('py-construction-robot-mk01'):add_ingredient({type = "item", name = "bob-robot-brain-construction", amount = 1})
+      RECIPE('py-construction-robot-mk01'):add_ingredient({type = "item", name = "bob-robot-tool-construction", amount = 1})
       RECIPE('py-construction-robot-mk01'):remove_ingredient("electronic-circuit")
       RECIPE('bob-roboport-antenna-1'):replace_ingredient("advanced-circuit", "electronic-circuit")
       RECIPE('bob-roboport-chargepad-1'):replace_ingredient("advanced-circuit", "electronic-circuit")

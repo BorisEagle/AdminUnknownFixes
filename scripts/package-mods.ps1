@@ -1,0 +1,89 @@
+#Requires -Version 5.1
+<#
+.SYNOPSIS
+    Build Factorio release zips for AdminUnknownFixes (repo root) and pyppatba (pyppatba-stub/).
+
+.DESCRIPTION
+    Stages an allowlisted copy of each mod into <name>_<version>/ and writes zips under dist/.
+    Excludes othermodsource, .git, pyppatba-stub from the main mod zip.
+
+.EXAMPLE
+    From repo root:
+        pwsh ./scripts/package-mods.ps1
+        pwsh ./scripts/package-mods.ps1 -OutDir dist -Clean
+#>
+param(
+    [string]$OutDir = 'dist',
+    [switch]$Clean
+)
+
+$ErrorActionPreference = 'Stop'
+$root = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+$dist = Join-Path $root $OutDir
+
+$mainInfoPath = Join-Path $root 'info.json'
+$stubInfoPath = Join-Path (Join-Path $root 'pyppatba-stub') 'info.json'
+if (-not (Test-Path $mainInfoPath)) { throw "Missing $mainInfoPath" }
+if (-not (Test-Path $stubInfoPath)) { throw "Missing $stubInfoPath" }
+
+$main = Get-Content -Raw $mainInfoPath | ConvertFrom-Json
+$stub = Get-Content -Raw $stubInfoPath | ConvertFrom-Json
+
+$staging = Join-Path $env:TEMP ("auf-pack-" + [guid]::NewGuid().ToString())
+try {
+    New-Item -ItemType Directory -Path $staging -Force | Out-Null
+
+    $mainInner = Join-Path $staging ("{0}_{1}" -f $main.name, $main.version)
+    New-Item -ItemType Directory -Path $mainInner -Force | Out-Null
+
+    $mainFiles = @(
+        'control.lua',
+        'data.lua',
+        'data-updates.lua',
+        'data-final-fixes.lua',
+        'settings.lua',
+        'settings-final-fixes.lua',
+        'info.json',
+        'changelog.txt',
+        'thumbnail.png'
+    )
+    foreach ($f in $mainFiles) {
+        $src = Join-Path $root $f
+        if (Test-Path -LiteralPath $src) {
+            Copy-Item -LiteralPath $src -Destination (Join-Path $mainInner $f) -Force
+        }
+    }
+    $mainDirs = @('functions', 'graphics', 'locale', 'migrations', 'prototypes')
+    foreach ($d in $mainDirs) {
+        $src = Join-Path $root $d
+        if (Test-Path -LiteralPath $src) {
+            Copy-Item -LiteralPath $src -Destination (Join-Path $mainInner $d) -Recurse -Force
+        }
+    }
+
+    $stubInner = Join-Path $staging ("{0}_{1}" -f $stub.name, $stub.version)
+    New-Item -ItemType Directory -Path $stubInner -Force | Out-Null
+    Copy-Item -Path (Join-Path $root 'pyppatba-stub\*') -Destination $stubInner -Recurse -Force
+
+    if ($Clean -and (Test-Path -LiteralPath $dist)) {
+        Remove-Item -LiteralPath $dist -Recurse -Force
+    }
+    New-Item -ItemType Directory -Path $dist -Force | Out-Null
+
+    $mainZip = Join-Path $dist ("{0}_{1}.zip" -f $main.name, $main.version)
+    $stubZip = Join-Path $dist ("{0}_{1}.zip" -f $stub.name, $stub.version)
+    if (Test-Path -LiteralPath $mainZip) { Remove-Item -LiteralPath $mainZip -Force }
+    if (Test-Path -LiteralPath $stubZip) { Remove-Item -LiteralPath $stubZip -Force }
+
+    Compress-Archive -Path $mainInner -DestinationPath $mainZip -CompressionLevel Optimal -Force
+    Compress-Archive -Path $stubInner -DestinationPath $stubZip -CompressionLevel Optimal -Force
+
+    Write-Host "Wrote:"
+    Write-Host "  $mainZip"
+    Write-Host "  $stubZip"
+}
+finally {
+    if (Test-Path -LiteralPath $staging) {
+        Remove-Item -LiteralPath $staging -Recurse -Force -ErrorAction SilentlyContinue
+    }
+}

@@ -11,7 +11,7 @@ if mods['pyalienlife'] then
 	fun.results_replacer('more-science-pack-21', 'exoskeleton-equipment', 'belt-immunity-equipment')
 	if mods['pyhightech'] then
 		TECHNOLOGY('tank'):add_prereq('basic-electronics')
-		RECIPE('more-science-pack-25'):add_ingredient('intelligent-unit')
+		RECIPE('more-science-pack-25'):add_ingredient({type = "item", name = "intelligent-unit", amount = 1})
 	else
 		TECHNOLOGY('tank'):add_prereq('py-science-pack-mk02')
 	end

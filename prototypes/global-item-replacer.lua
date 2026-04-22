@@ -231,3 +231,5 @@ finalize()
 ----------------------------------------------------
 building_item_replacer('angels-washing-plant', 'washer')
 building_item_replacer('angels-washing-plant-2', 'washer-mk02')
+building_item_replacer('angels-washing-plant-3', 'washer-mk03')
+building_item_replacer('angels-washing-plant-4', 'washer-mk04')

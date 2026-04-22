@@ -1,4 +1,24 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.2
+Date: 2026-04-22
+  Changes:
+    - PyPostProcessing: use full ingredient tables for RECIPE():add_ingredient() (bare strings crashed recipe.lua)
+    - Bob's logistics / pyhightech: bob-repair-pack-2, py-construction-robot-mk01 recipe overrides
+    - Angel's water void: filtration-media on saline / purified void recipes
+    - MSP (pyalienlife + pyhightech): more-science-pack-25 intelligent-unit ingredient
+---------------------------------------------------------------------------------------------------
+Version: 2.0.1
+Date: 2026-04-22
+  Changes:
+    - Py washers: use washer / washer-mk02..mk04 instead of washing-plant (modern Py)
+    - Global item replacer: map angels-washing-plant-3/4 to washer-mk03/mk04
+    - Angel's bio: angels-cellulose-fiber and angels-wood-bricks item names
+    - coalgas-from-seaweed: only register when algae-green and algae-brown items exist
+    - angels-tin-plate-1: guard when recipe absent (e.g. without Bob's Plates)
+    - Bob's: bob-drills-2 / bob-area-drills-2, bob-steel-axe-2..6 technology names
+    - Bob's electronics overrides: guard optional recipes (silicon wafer, rubber, boards)
+    - Added pyppatba-stub sibling mod for PyPostProcessing pyppatba dependency
+---------------------------------------------------------------------------------------------------
 Version: 2.0.0
 Date: 2026-03-30
   Changes:

@@ -1,0 +1,1 @@
+-- Stub mod: no prototypes. Satisfies PyPostProcessing hard dependency on `pyppatba`.

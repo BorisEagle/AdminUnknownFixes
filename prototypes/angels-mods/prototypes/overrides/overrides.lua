@@ -1,8 +1,8 @@
 -- DATA STAGE OVERRIDES
 if mods['angelsrefining'] then
     if mods['angelsbioprocessing'] then
-        data.raw.item["cellulose-fiber"].fuel_category = "biomass"
-        data.raw.item["wood-bricks"].fuel_category = "biomass"
+        data.raw.item["angels-cellulose-fiber"].fuel_category = "biomass"
+        data.raw.item["angels-wood-bricks"].fuel_category = "biomass"
     end
 
     -- replace miner fluid

@@ -12,8 +12,8 @@ if mods['boblogistics'] then
       fun.remove_recipe_unlock('construction-robot')
    end
    if mods['pyalienlife'] then
-        TECHNOLOGY("bob-drills-1"):add_pack("py-science-pack-1"):add_prereq("electric-mining-drill"):remove_prereq("electronics")
-        TECHNOLOGY("bob-area-drills-1"):add_pack("py-science-pack-1"):add_prereq("electric-mining-drill"):remove_prereq("electronics")
+        TECHNOLOGY("bob-drills-2"):add_pack("py-science-pack-1"):add_prereq("electric-mining-drill"):remove_prereq("electronics")
+        TECHNOLOGY("bob-area-drills-2"):add_pack("py-science-pack-1"):add_prereq("electric-mining-drill"):remove_prereq("electronics")
    end
    if mods['pyrawores'] then
       fun.ingredient_replace('bob-storage-tank-all-corners','iron-plate','lead-plate')
@@ -30,14 +30,14 @@ if mods['bobgreenhouse'] then
 end
 
 if mods['bobmining'] then
-   TECHNOLOGY("steel-axe-3"):add_prereq("logistic-science-pack")
-   TECHNOLOGY("steel-axe-4"):add_prereq("chemical-science-pack")
-   TECHNOLOGY("steel-axe-5"):add_prereq("production-science-pack")
-   TECHNOLOGY("steel-axe-6"):add_prereq("utility-science-pack")
+   TECHNOLOGY("bob-steel-axe-3"):add_prereq("logistic-science-pack")
+   TECHNOLOGY("bob-steel-axe-4"):add_prereq("chemical-science-pack")
+   TECHNOLOGY("bob-steel-axe-5"):add_prereq("production-science-pack")
+   TECHNOLOGY("bob-steel-axe-6"):add_prereq("utility-science-pack")
    if mods['pyalienlife'] then
-      TECHNOLOGY("steel-axe-2"):add_prereq("py-science-pack-1"):remove_pack("logistic-science-pack"):add_pack("py-science-pack-1")
+      TECHNOLOGY("bob-steel-axe-2"):add_prereq("py-science-pack-1"):remove_pack("logistic-science-pack"):add_pack("py-science-pack-1")
    else
-      TECHNOLOGY("steel-axe-2"):add_prereq("logistic-science-pack")
+      TECHNOLOGY("bob-steel-axe-2"):add_prereq("logistic-science-pack")
    end
 end
 

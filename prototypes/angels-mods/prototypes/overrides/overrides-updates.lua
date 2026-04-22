@@ -15,7 +15,7 @@ if mods['angelsrefining'] then
         end
     end
     --merge angel's washers to py's
-    table.insert(data.raw['assembling-machine']['washing-plant'].crafting_categories, 'angels-washer')
+    table.insert(data.raw['assembling-machine']['washer'].crafting_categories, 'angels-washer')
     data.raw.recipe['angels-washing-washer'] = nil
     fun.remove_recipe_unlock('angels-washer')
     --merge angels filters to py
@@ -47,16 +47,16 @@ if mods['angelsrefining'] then
         table.insert(data.raw['assembling-machine']['carbon-filter-mk04'].crafting_categories, 'angels-filtering-3')
         --merge angel's washers to py's
         --mk02
-        table.insert(data.raw['assembling-machine']['washing-plant-2'].crafting_categories, 'angels-washer')
+        table.insert(data.raw['assembling-machine']['washer-mk02'].crafting_categories, 'angels-washer')
         data.raw.recipe['angels-washer-mk02'] = nil
         fun.remove_recipe_unlock('angels-washer-mk02')
         if mods['ExtendedAngels'] then
             --mk03
-            table.insert(data.raw['assembling-machine']['washing-plant-3'].crafting_categories, 'angels-washer')
+            table.insert(data.raw['assembling-machine']['washer-mk03'].crafting_categories, 'angels-washer')
             data.raw.recipe['angels-washer-mk03'] = nil
             fun.remove_recipe_unlock('angels-washer-mk03')
             --mk04
-            table.insert(data.raw['assembling-machine']['washing-plant-4'].crafting_categories, 'angels-washer')
+            table.insert(data.raw['assembling-machine']['washer-mk04'].crafting_categories, 'angels-washer')
             data.raw.recipe['angels-washer-mk04'] = nil
             fun.remove_recipe_unlock('angels-washer-mk04')
         end
@@ -107,11 +107,13 @@ if mods['angelsrefining'] then
         if angelsmods.trigger.ores["tin"] then
             data.raw.resource['angels-tin-ore'] = nil
             data.raw['autoplace-control']['angels-tin-ore'] = nil
-            data.raw.recipe['angels-tin-plate-1'].hidden = true
+            if data.raw.recipe['angels-tin-plate-1'] then
+                data.raw.recipe['angels-tin-plate-1'].hidden = true
+                fun.tech_remove_recipe('angels-mining-with-fluid', 'angels-tin-plate-1')
+            end
             data.raw.resource['angels-ore6'].category = 'basic-with-fluid'
             data.raw.resource['angels-ore6'].minable.fluid_amount = 100
             data.raw.resource['angels-ore6'].minable.required_fluid = 'steam'
-            fun.tech_remove_recipe('angels-mining-with-fluid', 'angels-tin-plate-1')
             fun.tech_add_prerequisites('solder-mk01', 'angels-ore-crushing')
         end
         if angelsmods.trigger.ores["zinc"] then
@@ -121,8 +123,8 @@ if mods['angelsrefining'] then
         end
         ::skipseablock::
 
-        RECIPE('washing-plant'):remove_ingredient('electronic-circuit')
-        RECIPE('washing-plant'):add_ingredient({type = "item", name = "small-parts-01", amount = 15})
+        RECIPE('washer'):remove_ingredient('electronic-circuit')
+        RECIPE('washer'):add_ingredient({type = "item", name = "small-parts-01", amount = 15})
         RECIPE('angels-seafloor-pump'):remove_ingredient('electronic-circuit')
         RECIPE('angels-seafloor-pump'):add_ingredient({type = "item", name = "small-parts-01", amount = 10})
     end
@@ -216,8 +218,8 @@ if mods['angelspetrochem'] then
     
         RECIPE('angels-clarifier'):add_unlock('angels-water-treatment-2')
 
-        RECIPE('angels-water-void-water-saline'):add_ingredient('filtration-media'):add_unlock('angels-water-treatment-2')
-        RECIPE('angels-water-void-water-purified'):add_ingredient('filtration-media'):add_unlock('angels-water-treatment-2')
+        RECIPE('angels-water-void-water-saline'):add_ingredient({type = "item", name = "filtration-media", amount = 1}):add_unlock('angels-water-treatment-2')
+        RECIPE('angels-water-void-water-purified'):add_ingredient({type = "item", name = "filtration-media", amount = 1}):add_unlock('angels-water-treatment-2')
 
         TECHNOLOGY('angels-water-treatment-2'):add_prereq('angels-filtration')
 

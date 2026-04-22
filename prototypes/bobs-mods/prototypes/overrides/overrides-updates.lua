@@ -104,13 +104,15 @@ end
 
 if mods['bobores'] then
     if mods['pyrawores'] then
-        data.raw.resource['bob-ore-aluminium'].minable.results = {
-            {
-                type = 'item',
-                name = 'bauxite-ore',
-                amount = 1
+        if data.raw.resource['bob-ore-aluminium'] then
+            data.raw.resource['bob-ore-aluminium'].minable.results = {
+                {
+                    type = 'item',
+                    name = 'bauxite-ore',
+                    amount = 1
+                }
             }
-        }
+        end
     end
 end
 
@@ -120,11 +122,17 @@ if mods['bobplates'] then
 
         data.raw.recipe['silicon-carbide'] = nil
 
-        TECHNOLOGY('grinding'):add_prereq('silicon-carbide')
+        if data.raw.technology['grinding'] then
+            TECHNOLOGY('grinding'):add_prereq('silicon-carbide')
+        end
 
-        TECHNOLOGY('bob-fluid-barrel-processing'):add_prereq('fluid-handling')
-        TECHNOLOGY('bob-fluid-barrel-processing'):remove_prereq('logistic-science-pack')
-        TECHNOLOGY('bob-fluid-barrel-processing'):remove_pack('logistic-science-pack'):remove_pack('py-science-pack-1')
+        if data.raw.technology['bob-fluid-barrel-processing'] then
+            TECHNOLOGY('bob-fluid-barrel-processing'):add_prereq('fluid-handling')
+            TECHNOLOGY('bob-fluid-barrel-processing'):remove_prereq('logistic-science-pack')
+            if not data.raw.technology['bob-fluid-barrel-processing'].research_trigger then
+                TECHNOLOGY('bob-fluid-barrel-processing'):remove_pack('logistic-science-pack'):remove_pack('py-science-pack-1')
+            end
+        end
     end
 end
 
@@ -196,19 +204,19 @@ if mods['bobassembly'] then
         }
         --modify assembly machine 4
         data.raw['assembling-machine']['bob-assembling-machine-4'].crafting_speed = 6
-        data.raw['assembling-machine']['bob-assembling-machine-4'].energy_source = table.deep_copy(burner)
+        data.raw['assembling-machine']['bob-assembling-machine-4'].energy_source = table.deepcopy(burner)
         table.insert(data.raw['assembling-machine']['bob-assembling-machine-4'].energy_source.fuel_categories, "jerry")
         data.raw['assembling-machine']['bob-assembling-machine-4'].allowed_effects = {}
         data.raw['assembling-machine']['bob-assembling-machine-4'].module_slots = 0
         --modify assembly machine 5
         data.raw['assembling-machine']['bob-assembling-machine-5'].crafting_speed = 8
-        data.raw['assembling-machine']['bob-assembling-machine-5'].energy_source = table.deep_copy(burner)
+        data.raw['assembling-machine']['bob-assembling-machine-5'].energy_source = table.deepcopy(burner)
         table.insert(data.raw['assembling-machine']['bob-assembling-machine-5'].energy_source.fuel_categories, "jerry")
         data.raw['assembling-machine']['bob-assembling-machine-5'].allowed_effects = {}
         data.raw['assembling-machine']['bob-assembling-machine-5'].module_slots = 0
         --modify assembly machine 6
         data.raw['assembling-machine']['bob-assembling-machine-6'].crafting_speed = 10
-        data.raw['assembling-machine']['bob-assembling-machine-6'].energy_source = table.deep_copy(burner)
+        data.raw['assembling-machine']['bob-assembling-machine-6'].energy_source = table.deepcopy(burner)
         table.insert(data.raw['assembling-machine']['bob-assembling-machine-6'].energy_source.fuel_categories, "jerry")
         data.raw['assembling-machine']['bob-assembling-machine-6'].allowed_effects = {}
         data.raw['assembling-machine']['bob-assembling-machine-6'].module_slots = 0
@@ -307,15 +315,19 @@ if mods['bobwarfare'] then
 end
 
 if mods['bobrevamp'] then
-    RECIPE('heat-shield-tile'):add_ingredient({type = "item", name = "coke", amount = 5}):add_ingredient({type = "item", name = "graphite", amount = 1}):add_ingredient({type = "item", name = "saps", amount = 10}):add_ingredient({type = "item", name = "nichrome", amount = 2}):remove_ingredient('steel-plate'):remove_ingredient('plastic-bar')
-    if mods['angelssmelting'] then
-        data.raw.recipe['heat-shield-tile'].category = 'sintering'
+    if data.raw.recipe['heat-shield-tile'] then
+        RECIPE('heat-shield-tile'):add_ingredient({type = "item", name = "coke", amount = 5}):add_ingredient({type = "item", name = "graphite", amount = 1}):add_ingredient({type = "item", name = "saps", amount = 10}):add_ingredient({type = "item", name = "nichrome", amount = 2}):remove_ingredient('steel-plate'):remove_ingredient('plastic-bar')
+        if mods['angelssmelting'] then
+            data.raw.recipe['heat-shield-tile'].category = 'sintering'
 
-        TECHNOLOGY('heat-shield'):remove_prereq('powder-metallurgy-4'):add_prereq('powder-metallurgy-1'):add_prereq('py-science-pack-3')
+            if data.raw.technology['heat-shield'] then
+                TECHNOLOGY('heat-shield'):remove_prereq('powder-metallurgy-4'):add_prereq('powder-metallurgy-1'):add_prereq('py-science-pack-3')
 
-        OV.remove_science_pack('heat-shield', 'production-science-pack')
+                OV.remove_science_pack('heat-shield', 'production-science-pack')
 
-        TECHNOLOGY('heat-shield'):add_pack("py-science-pack-3")
+                TECHNOLOGY('heat-shield'):add_pack("py-science-pack-3")
+            end
+        end
     end
 end
 

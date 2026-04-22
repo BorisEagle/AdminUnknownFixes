@@ -33,3 +33,10 @@ end
 
 --apm mods
 require('prototypes/apm-mods/Data')
+
+-- Compatibility fix: reapply pypostprocessing's metatables to any recipe/technology
+-- prototype that was added via direct data.raw assignment instead of data:extend.
+-- Prevents crashes like pypetroleumhandling's py.global_item_replacer at data-updates
+-- stage (e.g. "attempt to call method 'replace_ingredient' (a nil value)").
+-- Must run at the end of data.lua, before any data-updates stage begins.
+require('functions/fix-pypp-metatables')

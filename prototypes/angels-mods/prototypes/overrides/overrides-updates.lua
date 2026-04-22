@@ -184,9 +184,15 @@ if mods['angelspetrochem'] then
         require('__AdminUnknownFixes__/prototypes/angels-mods/prototypes/recipes/urea')
     end
     if mods['pyalienlife'] then
-        TECHNOLOGY('angels-basic-chemistry-3'):add_prereq('py-science-pack-mk01')
-        TECHNOLOGY('resin-1'):remove_prereq('angels-nitrogen-processing-2')
-        TECHNOLOGY('angels-melamine'):add_prereq('angels-resins')
+        if data.raw.technology['angels-basic-chemistry-3'] then
+            TECHNOLOGY('angels-basic-chemistry-3'):add_prereq('py-science-pack-mk01')
+        end
+        if data.raw.technology['resin-1'] then
+            TECHNOLOGY('resin-1'):remove_prereq('angels-nitrogen-processing-2')
+        end
+        if data.raw.technology['angels-melamine'] then
+            TECHNOLOGY('angels-melamine'):add_prereq('angels-resins')
+        end
 
         RECIPE('angels-solid-resin'):set_fields{ results = {{type = "item", name = "saps", amount = 40}} }
     end
@@ -295,8 +301,10 @@ if mods['angelsbioprocessing'] then
 
         fun.remove_recipe_unlock('angels-algae-green-simple')
 
-        RECIPE('puffer-butchery-1'):add_result({type = "item", name = "gas-bladder", amount = 1})
-        data.raw.recipe['puffer-butchery-1'].main_product = "gas-bladder"
+        if data.raw.recipe['puffer-butchery-1'] then
+            RECIPE('puffer-butchery-1'):add_result({type = "item", name = "gas-bladder", amount = 1})
+            data.raw.recipe['puffer-butchery-1'].main_product = "gas-bladder"
+        end
     end
     if mods['pyalternativeenergy'] then
         RECIPE('eg-si'):add_ingredient({type = "item", name = "crystal-grindstone", amount = 1})

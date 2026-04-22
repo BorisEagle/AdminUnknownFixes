@@ -1,4 +1,71 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.16
+Date: 2026-04-22
+  Changes:
+    - Bob's assembly: fix typo 'table.deep_copy' -> 'table.deepcopy' in burner-start energy_source override for bob-assembling-machine-4/5/6
+---------------------------------------------------------------------------------------------------
+Version: 2.0.15
+Date: 2026-04-22
+  Changes:
+    - Bob's plates + pyalienlife: guard grinding and bob-fluid-barrel-processing technology overrides (TECHNOLOGY() errors on missing techs; also skip pack swap when bob-fluid-barrel-processing uses research_trigger)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.14
+Date: 2026-04-22
+  Changes:
+    - Bob's ores + pyrawores: guard bob-ore-aluminium resource minable.results override (crashed when resource absent in current Bob's Ores)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.13
+Date: 2026-04-22
+  Changes:
+    - Angel's bioprocessing + pyalienlife: guard puffer-butchery-1 recipe main_product override (crashed when recipe absent in current pyalienlife)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.12
+Date: 2026-04-22
+  Changes:
+    - Angel's petrochem + pyalienlife: guard resin-1 / angels-basic-chemistry-3 / angels-melamine technology prerequisite overrides (crashed in current Factorio 2.0 stack because TECHNOLOGY() errors on missing techs unlike RECIPE())
+---------------------------------------------------------------------------------------------------
+Version: 2.0.11
+Date: 2026-04-22
+  Changes:
+    - Fix load hang introduced in 2.0.9/2.0.10: the for-loop in the repair helpers used pairs as if it were a stateful iterator (for _, v in pairs, t, nil) which made the loop call pairs(t, nil) repeatedly and never terminate. Helpers now iterate with next directly (for _, v in next, t, nil).
+---------------------------------------------------------------------------------------------------
+Version: 2.0.10
+Date: 2026-04-22
+  Changes:
+    - Fix load hang introduced in 2.0.9: the pairs() wrapper's repair helpers called the wrapped pairs themselves, causing infinite recursion. Helpers now capture and use the original pairs via rawget(_G, "pairs").
+---------------------------------------------------------------------------------------------------
+Version: 2.0.9
+Date: 2026-04-22
+  Changes:
+    - Compatibility: wrap global pairs() so any iteration of data.raw.recipe or data.raw.technology self-heals missing pypostprocessing metatables (fixes 'attempt to call method replace_ingredient (a nil value)' in pyalienlife/data-updates.lua line 186 and similar direct-iteration crashes in mods that load between pypostprocessing and AdminUnknownFixes)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.8
+Date: 2026-04-22
+  Changes:
+    - Compatibility: reapply pypostprocessing recipe/technology metatables at end of data.lua, and wrap py.global_item_replacer / py.global_fluid_replacer / py.global_prerequisite_replacer so they self-heal on every call (fixes 'attempt to call method replace_ingredient (a nil value)' in pypetroleumhandling/data-updates.lua when other mods add prototypes via direct data.raw assignment)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.7
+Date: 2026-04-22
+  Changes:
+    - Bob's plates + pyalienlife: guard xyhiphoe-blood fluid auto_barrel override (crashed when fluid absent in current pyalienlife)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.6
+Date: 2026-04-22
+  Changes:
+    - Bob's mining + pyalienlife: skip bob-steel-axe-2 science-pack swap when technology uses research_trigger (Factorio 2.0 Bob's Mining no longer has unit/packs on this tech)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.5
+Date: 2026-04-22
+  Changes:
+    - Bob's greenhouse + pyalienlife: guard wood-pellets / seedling fuel_category overrides (crashed when items absent in current Bob's Greenhouse)
+    - Bob's greenhouse + pyalienlife: guard bob-greenhouse technology prerequisite override
+---------------------------------------------------------------------------------------------------
+Version: 2.0.4
+Date: 2026-04-22
+  Changes:
+    - Bob's revamp: guard heat-shield-tile recipe override (crashed when recipe absent in Factorio 2.0 / current Bob's Revamp)
+    - Bob's revamp: guard heat-shield technology prerequisite and science-pack overrides
+---------------------------------------------------------------------------------------------------
 Version: 2.0.3
 Date: 2026-04-22
   Changes:

@@ -288,17 +288,21 @@ if mods['bobgreenhouse'] then
 end
 
 if mods['bobwarfare'] then
-    fun.tech_remove_recipe('rocket-silo', 'rocket-engine')
-    data.raw.recipe['rocket-engine'].ingredients = nil
-    RECIPE('rocket-engine'):add_ingredient({type = "item", name = "low-density-structure", amount = 5})
-    data.raw.technology['bob-rocket'].prerequisits = {
-        'rocketry',
-        'military-3',
-        'low-density-structure'
-    }
-    if mods['pyrawores'] then
-        RECIPE('rocket-engine'):add_ingredient({type = "item", name = "solder", amount = 20})
-        RECIPE('rocket-engine'):add_ingredient({type = "item", name = "super-steel", amount = 10})
+    if data.raw.recipe['rocket-engine'] then
+        fun.tech_remove_recipe('rocket-silo', 'rocket-engine')
+        data.raw.recipe['rocket-engine'].ingredients = nil
+        RECIPE('rocket-engine'):add_ingredient({type = "item", name = "low-density-structure", amount = 5})
+        if mods['pyrawores'] then
+            RECIPE('rocket-engine'):add_ingredient({type = "item", name = "solder", amount = 20})
+            RECIPE('rocket-engine'):add_ingredient({type = "item", name = "super-steel", amount = 10})
+        end
+    end
+    if data.raw.technology['bob-rocket'] then
+        data.raw.technology['bob-rocket'].prerequisites = {
+            'rocketry',
+            'military-3',
+            'low-density-structure'
+        }
     end
 end
 

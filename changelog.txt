@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.3
+Date: 2026-04-22
+  Changes:
+    - Bob's warfare: guard rocket-engine recipe override (crashed when recipe absent in Factorio 2.0 / current Bob's Warfare)
+    - Bob's warfare: guard bob-rocket technology access and fix 'prerequisits' typo so prerequisite override actually applies
+---------------------------------------------------------------------------------------------------
 Version: 2.0.2
 Date: 2026-04-22
   Changes:

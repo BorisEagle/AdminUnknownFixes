@@ -2,6 +2,14 @@
 
 if mods['angelsrefining'] then
     OV = angelsmods.functions.OV
+    -- Angels 2.0 may rename/remove recipe categories; never reference a category that is not defined.
+    local function add_crafting_category(entity_type, entity_name, category_name)
+        local cat = data.raw["recipe-category"] and data.raw["recipe-category"][category_name]
+        local ent = data.raw[entity_type] and data.raw[entity_type][entity_name]
+        if cat and ent and ent.crafting_categories then
+            table.insert(ent.crafting_categories, category_name)
+        end
+    end
     -- replace miner fluid
     if data.raw.fluid['angels-gas-synthesis'] ~= nil then
         if data.raw.resource['borax'] ~= nil then
@@ -15,11 +23,11 @@ if mods['angelsrefining'] then
         end
     end
     --merge angel's washers to py's
-    table.insert(data.raw['assembling-machine']['washer'].crafting_categories, 'angels-washer')
+    add_crafting_category("assembling-machine", "washer", "angels-washer")
     data.raw.recipe['angels-washing-washer'] = nil
     fun.remove_recipe_unlock('angels-washer')
     --merge angels filters to py
-    table.insert(data.raw['assembling-machine']['carbon-filter'].crafting_categories, 'angels-filtering')
+    add_crafting_category("assembling-machine", "carbon-filter", "angels-filtering")
     data.raw.recipe['angels-filtration-unit'] = nil
     fun.remove_recipe_unlock('angels-filtration-unit')
     if mods['pyalienlife'] then TECHNOLOGY('soil-washing'):add_prereq('water-washing-1') end
@@ -27,69 +35,69 @@ if mods['angelsrefining'] then
     if mods['pyindustry'] then
         data.raw.recipe['angels-barreling-pump'] = nil
         fun.remove_recipe_unlock('angels-barreling-pump')
-        table.insert(data.raw['furnace']['barrel-machine-mk01'].crafting_categories, 'angels-barreling-pump')
+        add_crafting_category("furnace", "barrel-machine-mk01", "angels-barreling-pump")
     end
     if mods['pyrawores'] then
         --mk02
-        table.insert(data.raw['assembling-machine']['carbon-filter-mk02'].crafting_categories, 'angels-filtering')
-        table.insert(data.raw['assembling-machine']['carbon-filter-mk02'].crafting_categories, 'angels-filtering-2')
+        add_crafting_category("assembling-machine", "carbon-filter-mk02", "angels-filtering")
+        add_crafting_category("assembling-machine", "carbon-filter-mk02", "angels-filtering-2")
         data.raw.recipe['angels-filtration-unit-2'] = nil
         fun.remove_recipe_unlock('angels-filtration-unit-2')
         --mk03
-        table.insert(data.raw['assembling-machine']['carbon-filter-mk03'].crafting_categories, 'angels-filtering')
-        table.insert(data.raw['assembling-machine']['carbon-filter-mk03'].crafting_categories, 'angels-filtering-2')
-        table.insert(data.raw['assembling-machine']['carbon-filter-mk03'].crafting_categories, 'angels-filtering-3')
+        add_crafting_category("assembling-machine", "carbon-filter-mk03", "angels-filtering")
+        add_crafting_category("assembling-machine", "carbon-filter-mk03", "angels-filtering-2")
+        add_crafting_category("assembling-machine", "carbon-filter-mk03", "angels-filtering-3")
         data.raw.recipe['angels-filtration-unit-3'] = nil
         fun.remove_recipe_unlock('angels-filtration-unit-3')
         --mk04
-        table.insert(data.raw['assembling-machine']['carbon-filter-mk04'].crafting_categories, 'angels-filtering')
-        table.insert(data.raw['assembling-machine']['carbon-filter-mk04'].crafting_categories, 'angels-filtering-2')
-        table.insert(data.raw['assembling-machine']['carbon-filter-mk04'].crafting_categories, 'angels-filtering-3')
+        add_crafting_category("assembling-machine", "carbon-filter-mk04", "angels-filtering")
+        add_crafting_category("assembling-machine", "carbon-filter-mk04", "angels-filtering-2")
+        add_crafting_category("assembling-machine", "carbon-filter-mk04", "angels-filtering-3")
         --merge angel's washers to py's
         --mk02
-        table.insert(data.raw['assembling-machine']['washer-mk02'].crafting_categories, 'angels-washer')
+        add_crafting_category("assembling-machine", "washer-mk02", "angels-washer")
         data.raw.recipe['angels-washer-mk02'] = nil
         fun.remove_recipe_unlock('angels-washer-mk02')
         if mods['ExtendedAngels'] then
             --mk03
-            table.insert(data.raw['assembling-machine']['washer-mk03'].crafting_categories, 'angels-washer')
+            add_crafting_category("assembling-machine", "washer-mk03", "angels-washer")
             data.raw.recipe['angels-washer-mk03'] = nil
             fun.remove_recipe_unlock('angels-washer-mk03')
             --mk04
-            table.insert(data.raw['assembling-machine']['washer-mk04'].crafting_categories, 'angels-washer')
+            add_crafting_category("assembling-machine", "washer-mk04", "angels-washer")
             data.raw.recipe['angels-washer-mk04'] = nil
             fun.remove_recipe_unlock('angels-washer-mk04')
         end
         -- merge angels flotation cell into pys cell
         -- mk01
-        table.insert(data.raw['assembling-machine']['flotation-cell-mk01'].crafting_categories, 'angels-ore-refining-t2')
+        add_crafting_category("assembling-machine", "flotation-cell-mk01", "angels-ore-refining-t2")
         data.raw.recipe['angels-ore-floatation-cell'] = nil
         fun.remove_recipe_unlock('angels-ore-floatation-cell')
         -- mk02
-        table.insert(data.raw['assembling-machine']['flotation-cell-mk02'].crafting_categories, 'angels-ore-refining-t2')
+        add_crafting_category("assembling-machine", "flotation-cell-mk02", "angels-ore-refining-t2")
         data.raw.recipe['angels-ore-floatation-cell-2'] = nil
         fun.remove_recipe_unlock('angels-ore-floatation-cell-2')
         -- mk03
-        table.insert(data.raw['assembling-machine']['flotation-cell-mk03'].crafting_categories, 'angels-ore-refining-t2')
+        add_crafting_category("assembling-machine", "flotation-cell-mk03", "angels-ore-refining-t2")
         data.raw.recipe['angels-ore-floatation-cell-3'] = nil
         fun.remove_recipe_unlock('angels-ore-floatation-cell-3')
         -- add category to py mk04
-        table.insert(data.raw['assembling-machine']['flotation-cell-mk04'].crafting_categories, 'angels-ore-refining-t2')
+        add_crafting_category("assembling-machine", "flotation-cell-mk04", "angels-ore-refining-t2")
         -- merge angels leaching stations into pys stati9ons
         -- mk01
-        table.insert(data.raw['assembling-machine']['leaching-station-mk01'].crafting_categories, 'angels-ore-refining-t3')
+        add_crafting_category("assembling-machine", "leaching-station-mk01", "angels-ore-refining-t3")
         data.raw.recipe['angels-ore-leaching-plant'] = nil
         fun.remove_recipe_unlock('angels-ore-leaching-plant')
         -- mk02
-        table.insert(data.raw['assembling-machine']['leaching-station-mk02'].crafting_categories, 'angels-ore-refining-t3')
+        add_crafting_category("assembling-machine", "leaching-station-mk02", "angels-ore-refining-t3")
         data.raw.recipe['angels-ore-leaching-plant-2'] = nil
         fun.remove_recipe_unlock('angels-ore-leaching-plant-2')
         -- mk03
-        table.insert(data.raw['assembling-machine']['leaching-station-mk03'].crafting_categories, 'angels-ore-refining-t3')
+        add_crafting_category("assembling-machine", "leaching-station-mk03", "angels-ore-refining-t3")
         data.raw.recipe['angels-ore-leaching-plant-3'] = nil
         fun.remove_recipe_unlock('angels-ore-leaching-plant-3')
         -- add category to py mk04
-        table.insert(data.raw['assembling-machine']['leaching-station-mk04'].crafting_categories, 'angels-ore-refining-t3')
+        add_crafting_category("assembling-machine", "leaching-station-mk04", "angels-ore-refining-t3")
         if mods['SeaBlock'] then goto skipseablock end
         if angelsmods.trigger.ores["lead"] then
             data.raw.resource['angels-lead-ore'] = nil
@@ -109,7 +117,9 @@ if mods['angelsrefining'] then
             data.raw['autoplace-control']['angels-tin-ore'] = nil
             if data.raw.recipe['angels-tin-plate-1'] then
                 data.raw.recipe['angels-tin-plate-1'].hidden = true
-                fun.tech_remove_recipe('angels-mining-with-fluid', 'angels-tin-plate-1')
+                if data.raw.technology["angels-mining-with-fluid"] then
+                    fun.tech_remove_recipe("angels-mining-with-fluid", "angels-tin-plate-1")
+                end
             end
             data.raw.resource['angels-ore6'].category = 'basic-with-fluid'
             data.raw.resource['angels-ore6'].minable.fluid_amount = 100
@@ -129,7 +139,9 @@ if mods['angelsrefining'] then
         RECIPE('angels-seafloor-pump'):add_ingredient({type = "item", name = "small-parts-01", amount = 10})
     end
     if mods['pyhightech'] then
-        TECHNOLOGY('angels-water-treatment'):add_prereq('vacuum-tube-electronics')
+        if data.raw.technology["vacuum-tube-electronics"] and data.raw.technology["angels-water-treatment"] then
+            TECHNOLOGY("angels-water-treatment"):add_prereq("vacuum-tube-electronics")
+        end
     end
     if mods['pyalienlife'] then
         RECIPE('angels-empty-planter-box'):remove_ingredient('stone-brick'):add_ingredient({type = "item", name = "stone-brick", amount = 2})
@@ -171,17 +183,27 @@ if mods['angelspetrochem'] then
         fun.tech_remove_recipe('fluid-pressurization', 'pressured-air')
         RECIPE('angels-air-filter'):replace_ingredient('basic-circuit-board', 'small-parts-01')
         if mods['pyhightech'] then
-            TECHNOLOGY('angels-water-treatment'):remove_prereq('angels-fluid-control')
-            TECHNOLOGY('vacuum-tube-electronics'):add_prereq('angels-nitrogen-processing-1')
-            if not mods['SeaBlock'] then
-                TECHNOLOGY('angels-basic-chemistry'):add_prereq('vacuum-tube-electronics')
+            if data.raw.technology["angels-water-treatment"] then
+                TECHNOLOGY("angels-water-treatment"):remove_prereq("angels-fluid-control")
+            end
+            if data.raw.technology["vacuum-tube-electronics"] then
+                TECHNOLOGY("vacuum-tube-electronics"):add_prereq("angels-nitrogen-processing-1")
+                if not mods["SeaBlock"] and data.raw.technology["angels-basic-chemistry"] then
+                    TECHNOLOGY("angels-basic-chemistry"):add_prereq("vacuum-tube-electronics")
+                end
             end
         end
     end
     if mods['pyhightech'] then
-        TECHNOLOGY('angels-melamine'):add_prereq('angels-resins')
-        RECIPE('angels-melamine-resin'):add_ingredient({type = "fluid", name = "saps", amount = 10})
-        require('__AdminUnknownFixes__/prototypes/angels-mods/prototypes/recipes/urea')
+        if data.raw.technology["angels-melamine"] then
+            TECHNOLOGY("angels-melamine"):add_prereq("angels-resins")
+        end
+        if data.raw.recipe["angels-melamine-resin"] then
+            RECIPE("angels-melamine-resin"):add_ingredient({ type = "fluid", name = "saps", amount = 10 })
+        end
+        if data.raw.fluid["gas-urea"] and data.raw.item["urea"] then
+            require('__AdminUnknownFixes__/prototypes/angels-mods/prototypes/recipes/urea')
+        end
     end
     if mods['pyalienlife'] then
         if data.raw.technology['angels-basic-chemistry-3'] then
@@ -290,7 +312,9 @@ end
 
 if mods['angelsbioprocessing'] then
     if mods['pyhightech'] then
-        TECHNOLOGY('angels-bio-processing-green'):add_prereq('vacuum-tube-electronics')
+        if data.raw.technology["vacuum-tube-electronics"] and data.raw.technology["angels-bio-processing-green"] then
+            TECHNOLOGY("angels-bio-processing-green"):add_prereq("vacuum-tube-electronics")
+        end
         fun.tech_merge('angels-plastic-1', 'plastics-mk02')
         fun.tech_merge('angels-plastic-2', 'plastics-mk03')
         fun.tech_merge('angels-plastic-3', 'plastics-mk04')

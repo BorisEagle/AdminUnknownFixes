@@ -56,3 +56,8 @@ if mods['boblogistics'] then
     set_underground_recipe("bob-turbo-underground-belt", "bob-turbo-transport-belt", "express-underground-belt", "express-transport-belt")
     set_underground_recipe("bob-ultimate-underground-belt", "bob-ultimate-transport-belt", "bob-turbo-underground-belt", "bob-turbo-transport-belt")
 end
+
+-- After Angel's Petrochem (optional dep): remap hidden sulfur-processing prerequisites (pypp tech validation).
+require("prototypes/compatibility/fix-sulfur-processing-prerequisites")
+-- Load-order fallback: suppress pypp impossible-to-research (hidden prerequisite) check until our data-final-fixes.
+require("functions/patch-pypp-impossible-research-validation")

@@ -40,3 +40,6 @@ require('prototypes/apm-mods/Data')
 -- stage (e.g. "attempt to call method 'replace_ingredient' (a nil value)").
 -- Must run at the end of data.lua, before any data-updates stage begins.
 require('functions/fix-pypp-metatables')
+
+-- No-op TECHNOLOGY() for optional Bob's techs that pypostprocessing touches without guards.
+require('functions/pypp-technology-missing-shim')

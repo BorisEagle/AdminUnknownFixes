@@ -287,8 +287,12 @@ if mods['bobassembly'] then
 end
 
 if mods['bobgreenhouse'] then
-    data.raw['assembling-machine']['bob-greenhouse'].energy_usage = "300kW"
-    data.raw['assembling-machine']['bob-greenhouse'].allowed_effects = {}
+    local gh = data.raw['assembling-machine']['bob-greenhouse']
+    if gh then
+        gh.energy_usage = "300kW"
+        -- Factorio 2.0: module slots > 0 with allowed_effects = {} is invalid. Allow speed/consumption only (no productivity on crops).
+        gh.allowed_effects = { "speed", "consumption" }
+    end
     if mods['pyalienlife'] and not mods['angelsbioprocessing'] then
         require('__AdminUnknownFixes__/prototypes/bobs-mods/prototypes/recipes/charcoal')
         TECHNOLOGY('bob-energy-3'):add_prereq('bob-greenhouse')
@@ -451,9 +455,13 @@ end
 if mods['bobenemies'] then
     require('__AdminUnknownFixes__/prototypes/bobs-mods/prototypes/recipes/alien')
     if mods['bobtech'] then
-        if mods['pyhightech'] then
-            TECHNOLOGY('bob-quantum'):add_prereq('bob-alien-research')
-            data.raw.technology['bob-quantum'].unit.ingredients = {
+        if mods['pyhightech'] and data.raw.technology["bob-quantum"] then
+            if data.raw.technology["bob-alien-research"] then
+                TECHNOLOGY("bob-quantum"):add_prereq("bob-alien-research")
+            end
+            local bq = data.raw.technology["bob-quantum"]
+            if bq and bq.unit then
+                bq.unit.ingredients = {
                 {
                     "bob-science-pack-gold",
                     1
@@ -487,6 +495,7 @@ if mods['bobenemies'] then
                     1
                 }
             }
+            end
         end
     end
 end

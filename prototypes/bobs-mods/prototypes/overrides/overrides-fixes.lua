@@ -1,16 +1,23 @@
 
 if mods['boblogistics'] then
-    data.raw.inserter["steam-inserter"].filter_count = 1
-    data.raw.inserter["inserter"].filter_count = 2
-    data.raw.inserter["long-handed-inserter"].filter_count = 3
-    data.raw.inserter["fast-inserter"].filter_count = 4
-    data.raw.inserter["turbo-inserter"].filter_count = 5
-    data.raw.inserter["express-inserter"].filter_count = 5
+    local function set_inserter_filter_count(name, count)
+        local ins = data.raw.inserter[name]
+        if ins then
+            ins.filter_count = count
+        end
+    end
 
-    data.raw.inserter["red-stack-inserter"].filter_count = 3
-    data.raw.inserter["stack-inserter"].filter_count = 4
-    data.raw.inserter["turbo-stack-inserter"].filter_count = 5
-    data.raw.inserter["express-stack-inserter"].filter_count = 5
+    set_inserter_filter_count("steam-inserter", 1)
+    set_inserter_filter_count("inserter", 2)
+    set_inserter_filter_count("long-handed-inserter", 3)
+    set_inserter_filter_count("fast-inserter", 4)
+    set_inserter_filter_count("turbo-inserter", 5)
+    set_inserter_filter_count("express-inserter", 5)
+
+    set_inserter_filter_count("red-stack-inserter", 3)
+    set_inserter_filter_count("stack-inserter", 4)
+    set_inserter_filter_count("turbo-stack-inserter", 5)
+    set_inserter_filter_count("express-stack-inserter", 5)
 
     RECIPE("yellow-filter-inserter"):remove_unlock("logistics")
     RECIPE("red-filter-inserter"):remove_unlock("fast-inserter")
@@ -41,8 +48,10 @@ if mods['bobplates'] then
 
     fun.tech_merge('fluid-canister-processing', 'plastics')
     TECHNOLOGY('plastics'):add_prereq('fluid-handling')
-    TECHNOLOGY('gas-canisters'):add_prereq('bob-fluid-barrel-processing')
-    TECHNOLOGY('gas-canisters'):remove_pack('logistic-science-pack'):remove_pack('py-science-pack-1')
+    if data.raw.technology['gas-canisters'] then
+        TECHNOLOGY('gas-canisters'):add_prereq('bob-fluid-barrel-processing')
+        TECHNOLOGY('gas-canisters'):remove_pack('logistic-science-pack'):remove_pack('py-science-pack-1')
+    end
     if mods['pyrawores'] then
         if not mods['angelspetrochem'] then
             fun.global_prereq_replacer('electrolysis-1', 'electrolysis')

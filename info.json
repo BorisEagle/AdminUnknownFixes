@@ -1,12 +1,12 @@
 {
 	"name": "AdminUnknownFixes",
-	"version": "2.0.16",
+	"version": "2.0.48",
 	"factorio_version": "2.0",
 	"title": "AdminUnknownFixes",
 	"author": "KingArthur, Erkigmo, AdminUnknown",
 	"contact": "jakegodding@gmail.com",
 	"homepage": "https://github.com/jakegodding/AdminUnknownFixes",
-	"description": "Bridge mod for Pyanodon + Angel's + Bob's mod compatibility. Merges duplicate items, fixes progression, and balances recipes across mod packs. If PyPostProcessing requires the deprecated mod pyppatba (Pyanodons Post Processing Touched By an Angel), install the bundled pyppatba-stub folder as a separate mod (see repository pyppatba-stub/).",
+	"description": "Bridge mod for Pyanodon + Angel's + Bob's mod compatibility. Merges duplicate items, fixes progression, and balances recipes across mod packs. If PyPostProcessing still requires empty stub mods (pyppatba and/or PyCoalTBaA), download https://github.com/jakegodding/AdminUnknownFixes/raw/main/stubs/pyppatba_0.0.1.zip and https://github.com/jakegodding/AdminUnknownFixes/raw/main/stubs/PyCoalTBaA_0.0.1.zip into your Factorio mods folder; see GitHub README for steps. Run scripts/package-mods.ps1 to build release zips under dist/ (stub zips are also copied to stubs/ in the repo).",
 	"dependencies": [
 	"base >= 2.0.0",
 	"pycoalprocessing >= 3.0.0",

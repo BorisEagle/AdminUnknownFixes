@@ -1,19 +1,48 @@
 -- DATA FINAL FIXES STAGE OVERRIDES
+-- Factorio 2.0: TechnologyUnit.ingredients are ResearchIngredient = { ItemID, uint16 }, not IngredientPrototype tables.
 local function set_to_py1(techname)
     if not data.raw.technology[techname] then return end 
     data.raw.technology[techname].unit.ingredients = {
-        {type="item", name="automation-science-pack", amount=2},
-        {type="item", name="py-science-pack-1", amount=1}
+        {"automation-science-pack", 2},
+        {"py-science-pack-1", 1}
     }
 end
+local function token_bio_exists()
+    return (data.raw.tool and data.raw.tool["token-bio"])
+        or (data.raw.item and data.raw.item["token-bio"])
+end
+
 local function set_to_py1_with_bio(techname)
-    if not data.raw.technology[techname] then return end 
-    data.raw.technology[techname].unit.ingredients = {
-        {type="item", name="token-bio", amount=1},
-        {type="item", name="automation-science-pack", amount=2},
-        {type="item", name="py-science-pack-1", amount=1}
-    }
+    if not data.raw.technology[techname] then return end
+    if token_bio_exists() then
+        data.raw.technology[techname].unit.ingredients = {
+            {"token-bio", 1},
+            {"automation-science-pack", 2},
+            {"py-science-pack-1", 1}
+        }
+    else
+        set_to_py1(techname)
+    end
 end
+
+-- PyCoalProcessing removes tech oil-gathering; Angel's (and others) may still list it as a prerequisite.
+local function remove_missing_prereq_from_all_technologies(prereq_name)
+    if not prereq_name or data.raw.technology[prereq_name] then
+        return
+    end
+    for _, tech in pairs(data.raw.technology) do
+        local pre = tech.prerequisites
+        if pre then
+            for i = #pre, 1, -1 do
+                if pre[i] == prereq_name then
+                    table.remove(pre, i)
+                end
+            end
+        end
+    end
+end
+remove_missing_prereq_from_all_technologies("oil-gathering")
+
 if mods['angelsrefining'] then
     if mods['pyalienlife'] then
         set_to_py1('angels-ore-floatation')
@@ -49,13 +78,21 @@ end
 if mods['angelspetrochem'] then
     if mods['pyhightech'] then
         TECHNOLOGY('angels-nitrogen-processing-1'):remove_prereq('angels-basic-chemistry')
-        TECHNOLOGY('vacuum-tube-electronics'):add_prereq('angels-nitrogen-processing-1')
-        TECHNOLOGY('angels-mining-with-fluid'):remove_prereq('steel-processing')
+        if data.raw.technology["vacuum-tube-electronics"] then
+            TECHNOLOGY("vacuum-tube-electronics"):add_prereq("angels-nitrogen-processing-1")
+        end
+        if data.raw.technology["angels-mining-with-fluid"] then
+            TECHNOLOGY("angels-mining-with-fluid"):remove_prereq("steel-processing")
+        end
     end
     if mods['pyalienlife'] then
-        for i, ingredient in pairs(data.raw.technology['angels-basic-chemistry-3'].unit.ingredients) do
-            if ingredient.name == "logistic-science-pack" then
-                data.raw.technology['angels-basic-chemistry-3'].unit.ingredients[i] = nil
+        local chem3 = data.raw.technology['angels-basic-chemistry-3']
+        if chem3 and chem3.unit and chem3.unit.ingredients then
+            for i, ingredient in pairs(chem3.unit.ingredients) do
+                local pack = ingredient[1] or ingredient.name
+                if pack == "logistic-science-pack" then
+                    chem3.unit.ingredients[i] = nil
+                end
             end
         end
 
@@ -72,27 +109,22 @@ if mods['angelspetrochem'] then
 end
 
 if mods['angelsbioprocessing'] then
-    data.raw.technology['angels-alien-artifact-red'].unit.ingredients = {
-        { type = "item", name = "alien-artifact-red-tool", amount = 1 },
-        }
-    data.raw.technology['angels-alien-artifact-orange'].unit.ingredients = {
-        { type = "item", name = "alien-artifact-orange-tool", amount = 1 },
-        }
-    data.raw.technology['angels-alien-artifact-yellow'].unit.ingredients = {
-        { type = "item", name = "alien-artifact-yellow-tool", amount = 1 },
-        }
-    data.raw.technology['angels-alien-artifact-green'].unit.ingredients = {
-        { type = "item", name = "alien-artifact-green-tool", amount = 1 },
-        }
-    data.raw.technology['angels-alien-artifact-blue'].unit.ingredients = {
-        { type = "item", name = "alien-artifact-blue-tool", amount = 1 },
-        }
-    data.raw.technology['angels-alien-artifact-purple'].unit.ingredients = {
-        { type = "item", name = "alien-artifact-purple-tool", amount = 1 },
-        }
-    data.raw.technology['angels-alien-artifact'].unit.ingredients = {
-        { type = "item", name = "alien-artifact-tool", amount = 1 },
-        }
+    local function set_artifact_tech_unit_ingredients(tech_name, item_name)
+        local t = data.raw.technology[tech_name]
+        if t and t.unit then
+            t.unit.ingredients = {
+                { item_name, 1 },
+            }
+        end
+    end
+
+    set_artifact_tech_unit_ingredients("angels-alien-artifact-red", "alien-artifact-red-tool")
+    set_artifact_tech_unit_ingredients("angels-alien-artifact-orange", "alien-artifact-orange-tool")
+    set_artifact_tech_unit_ingredients("angels-alien-artifact-yellow", "alien-artifact-yellow-tool")
+    set_artifact_tech_unit_ingredients("angels-alien-artifact-green", "alien-artifact-green-tool")
+    set_artifact_tech_unit_ingredients("angels-alien-artifact-blue", "alien-artifact-blue-tool")
+    set_artifact_tech_unit_ingredients("angels-alien-artifact-purple", "alien-artifact-purple-tool")
+    set_artifact_tech_unit_ingredients("angels-alien-artifact", "alien-artifact-tool")
     if mods['pyalienlife'] then
         set_to_py1_with_bio('angels-bio-fermentation')
         set_to_py1_with_bio('angels-bio-arboretum-temperate-1')

@@ -893,20 +893,37 @@ function overrides.global_prereq_replacer(old, new)
 end
 
 function overrides.tech_merge_effects(old, new)
-    for _, oe in pairs(data.raw.technology[old].effects) do
-        for _, ne in pairs (data.raw.technology[new].effects) do
+    local old_tech = data.raw.technology[old]
+    local new_tech = data.raw.technology[new]
+    if not old_tech or not new_tech then
+        return
+    end
+    local old_effects = old_tech.effects
+    if not old_effects then
+        return
+    end
+    if not new_tech.effects then
+        new_tech.effects = {}
+    end
+    for _, oe in pairs(old_effects) do
+        for _, ne in pairs(new_tech.effects) do
             if oe == ne then goto skip_effect_merge end
         end
-        table.insert(data.raw.technology[new].effects, oe)
+        table.insert(new_tech.effects, oe)
         ::skip_effect_merge::
     end
 end
 
 function overrides.tech_merge(old, new)
+    local old_tech = data.raw.technology[old]
+    local new_tech = data.raw.technology[new]
+    if not old_tech or not new_tech then
+        return
+    end
     overrides.tech_merge_effects(old, new)
     overrides.global_prereq_replacer(old, new)
-    data.raw.technology[old].effects = nil
-    data.raw.technology[old].hidden = true
+    old_tech.effects = nil
+    old_tech.hidden = true
 end
 
 function overrides.remove_recipe_difficulties(recipes)

@@ -1,4 +1,165 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.48
+Date: 2026-04-23
+  Changes:
+    - Commit stub release zips under stubs/ with raw GitHub download URLs in info.json and new README; package-mods copies stub zips into stubs/ after each build; add docs/pypostprocessing-upstream-pr.md for proposed PyPP PR (AdminUnknownFixes + pyppatba dependency)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.47
+Date: 2026-04-23
+  Changes:
+    - PyHighTech + bobelectronics icon merge: intelligent-unit uses 32x32 asset; set icon_size 32 (fixes 64x64 sprite rectangle error on intelligent-unit.png)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.46
+Date: 2026-04-23
+  Changes:
+    - Bob's lab 2 + Py: merge research packs from any technology using bob-science-pack-gold and bob-alien-science-pack* into bob-lab-2.inputs (fixes no lab accepts bob-acid-bullets packs)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.45
+Date: 2026-04-23
+  Changes:
+    - Angel's petrochem + pyhightech: guard angels-mining-with-fluid TECHNOLOGY() and tech_remove_recipe when that technology is absent (Angel's 2.0 / mod options)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.44
+Date: 2026-04-22
+  Changes:
+    - urea-gasification: remove main_product gas-urea (PyPP ITEM() treats main_product as item; crashes). Only require urea recipe when gas-urea fluid and urea item exist
+---------------------------------------------------------------------------------------------------
+Version: 2.0.43
+Date: 2026-04-22
+  Changes:
+    - Bob's enemies + bobtech + pyhightech: only touch bob-quantum when that technology exists; guard add_prereq(bob-alien-research) on bob-alien-research existing
+---------------------------------------------------------------------------------------------------
+Version: 2.0.42
+Date: 2026-04-22
+  Changes:
+    - Angel's petrochem + pyhightech: guard angels-melamine TECHNOLOGY() and angels-melamine-resin RECIPE() when prototypes missing (PyPP errors on missing tech)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.41
+Date: 2026-04-22
+  Changes:
+    - Angel's + PyPP: only call TECHNOLOGY(vacuum-tube-electronics) when that prototype exists (removed/renamed in current pyhightech; fixes data-updates crash in overrides-updates / overrides-fixes)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.40
+Date: 2026-04-22
+  Changes:
+    - Post-replacer next_upgrade clear: include oil-refinery (same hidden-minable vs next_upgrade rule as chemical-plant)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.39
+Date: 2026-04-22
+  Changes:
+    - chemical-plant: clear next_upgrade after global_item_replacer (unconditional); earlier conditional ran before Py hid the mined item so the engine still rejected next_upgrade + hidden product
+---------------------------------------------------------------------------------------------------
+Version: 2.0.38
+Date: 2026-04-22
+  Changes:
+    - chemical-plant: clear next_upgrade when minable returns a hidden item (Factorio 2.0 rule; Angel's path skipped the old no-angels-only fix)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.37
+Date: 2026-04-22
+  Changes:
+    - Bob's greenhouse: set allowed_effects to speed and consumption only instead of empty table (Factorio 2.0 rejects module slots with no allowed effects)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.36
+Date: 2026-04-22
+  Changes:
+    - Angel's bioprocessing + Py: set_to_py1_with_bio only adds token-bio research ingredient when that tool/item exists; otherwise same packs as set_to_py1 (fixes assignID when pyalienlife removes or omits token-bio)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.35
+Date: 2026-04-22
+  Changes:
+    - PyCoal removes oil-gathering: strip that prerequisite from every technology when absent (covers angels-gas-processing and any other Angel's techs, not only angels-oil-processing)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.34
+Date: 2026-04-22
+  Changes:
+    - Angel's Petrochem + PyCoal: drop oil-gathering from angels-oil-processing prerequisites when that tech was removed (fixes assignID)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.33
+Date: 2026-04-22
+  Changes:
+    - sand-processing / bob-quartz Angel's fix: do not use data.raw.entity in data stage (nil); only check data.raw.resource for mine-trigger targets
+---------------------------------------------------------------------------------------------------
+Version: 2.0.32
+Date: 2026-04-22
+  Changes:
+    - Angel's Refining + Bob/AAI: when bob-quartz is removed, retarget sand-processing research_trigger from bob-quartz to ore-quartz/quartz if present, else craft-item sand (fixes assignID crash)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.31
+Date: 2026-04-22
+  Changes:
+    - Angel's refining + Py: only add merged crafting_categories when data.raw["recipe-category"][name] exists (Angels 2.0 dropped angels-washer in some builds; avoids assignID crash on washer assembling-machine)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.30
+Date: 2026-04-22
+  Changes:
+    - Angel's overrides: use Factorio 2.0 ResearchIngredient tuple form { "item", amount } for technology unit.ingredients (set_to_py1, alien artifact techs). Fixes prototype validation error on angels-ore-floatation etc. when PyPP runs after our data-final-fixes pass.
+---------------------------------------------------------------------------------------------------
+Version: 2.0.29
+Date: 2026-04-22
+  Changes:
+    - Bob's modules compat: use Factorio 2.0 flat-number ModuleEffects (speed/consumption/productivity/pollution as numbers, not { bonus = ... }) so speed-module and other module prototypes validate
+---------------------------------------------------------------------------------------------------
+Version: 2.0.28
+Date: 2026-04-22
+  Changes:
+    - Bob's modules compat: guard TECHNOLOGY() and bobmods.lib.tech tweaks when techs are absent (e.g. module-merging removed in current Bob's). Guard module effect and recipe ingredient overrides when prototypes are missing.
+---------------------------------------------------------------------------------------------------
+Version: 2.0.27
+Date: 2026-04-22
+  Changes:
+    - Bob's plates: only adjust gas-canisters technology when it exists (PyPP TECHNOLOGY() errors if missing; tech removed/renamed in current Py + Bob combo)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.26
+Date: 2026-04-22
+  Changes:
+    - tech_merge / tech_merge_effects: no-op when either technology is missing or has no effects (Bob's Plates no longer defines fluid-canister-processing in some versions; avoids nil index in data-final-fixes)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.25
+Date: 2026-04-22
+  Changes:
+    - Bob's logistics: guard inserter filter_count overrides (steam-inserter etc. absent in current Bob's Logistics / Factorio 2.0)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.24
+Date: 2026-04-22
+  Changes:
+    - Angel's bioprocessing: guard alien-artifact colour technology unit.ingredient overrides (crashed when tech or unit absent in current angelsbioprocessing)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.23
+Date: 2026-04-22
+  Changes:
+    - pypp compatibility: broaden error() patch to suppress the full Pyanodon impossible-to-research / hidden-prerequisite diagnostic (not only sulfur-processing; fixes bob-centrifuge-2 / uranium-processing and similar stragglers). Renamed helper to patch-pypp-impossible-research-validation.lua
+---------------------------------------------------------------------------------------------------
+Version: 2.0.22
+Date: 2026-04-22
+  Changes:
+    - Angel's + pypp: remap sulfur-processing to angels-sulfur-processing-1 in prerequisites for all technologies (not only explosives; fixes battery and any other stragglers). Broaden error() suppression to any impossible-to-research message mentioning hidden prerequisite sulfur-processing.
+---------------------------------------------------------------------------------------------------
+Version: 2.0.21
+Date: 2026-04-22
+  Changes:
+    - Angel's + pypp: wrap global error() from end of data-updates until start of our data-final-fixes to suppress only pypostprocessing's impossible-to-research check for explosives + hidden sulfur-processing (Angel's data-final-fixes can re-hide sulfur after data-updates; load order vs pypp is not controllable from AdminUnknownFixes alone)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.20
+Date: 2026-04-22
+  Changes:
+    - Angel's Petrochem + pypp: fix explosives / sulfur-processing impossible-to-research error when Angel's second OV.execute in data-final-fixes hides sulfur after data-updates (temporarily clear hidden for pypp check; restore at start of our data-final-fixes). Also remove erroneous early return in sulfur-prereq remap when angelspetrochem is active.
+---------------------------------------------------------------------------------------------------
+Version: 2.0.19
+Date: 2026-04-22
+  Changes:
+    - Angel's Petrochem + pypp: remap explosives technology prerequisite from hidden sulfur-processing to angels-sulfur-processing-1 at end of data-updates (fixes pypostprocessing impossible-to-research check in data-final-fixes.lua)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.18
+Date: 2026-04-22
+  Changes:
+    - Compatibility: wrap pypostprocessing TECHNOLOGY() for missing bob-thorium-processing and bob-deuterium-fuel-reprocessing (pypp compatibility/bobs.lua assumes they exist when uranium-processing is hidden; current Bob's may omit them)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.17
+Date: 2026-04-22
+  Changes:
+    - Added PyCoalTBaA-stub sibling mod (name PyCoalTBaA) so pypostprocessing no longer errors with the Please install PyCoal Touched By an Angel message when angelsrefining is loaded (pypp compatibility.lua gate; bridge content is in AdminUnknownFixes)
+    - package-mods.ps1 / package-mods.sh now also build dist/PyCoalTBaA_0.0.1.zip alongside AdminUnknownFixes and pyppatba
+---------------------------------------------------------------------------------------------------
 Version: 2.0.16
 Date: 2026-04-22
   Changes:

@@ -1,3 +1,5 @@
+-- Restore sulfur-processing.hidden and global error() after pypostprocessing (see fix-sulfur-processing-prerequisites.lua, patch-pypp-impossible-research-validation.lua).
+require('prototypes/compatibility/restore-sulfur-processing-hidden')
 
 --angel mods
 require('prototypes/angels-mods/Data-Final-Fixes')
@@ -49,6 +51,9 @@ end
 ----------------------------------------------------
 require('prototypes/global-item-replacer')
 
+-- After replacer may hide items used as minable results for vanilla upgradable assemblers (Factorio 2.0 vs next_upgrade).
+require('prototypes/compatibility/fix-chemical-plant-next-upgrade')
+
 ----------------------------------------------------
 -- MERGED FROM PyPPTBaA: Ingredient Deduplicator
 ----------------------------------------------------
@@ -71,7 +76,8 @@ if mods['pyhightech'] and mods['bobelectronics'] then
         data.raw.item['processing-unit'].icon = "__pyhightechgraphics__/graphics/icons/circuit-board-3.png"
     end
     if data.raw.item['intelligent-unit'] then
-        data.raw.item['intelligent-unit'].icon_size = 64
+        -- pyhightechgraphics intelligent-unit.png is 32x32; 64 here triggers Factorio sprite bounds error.
+        data.raw.item['intelligent-unit'].icon_size = 32
         data.raw.item['intelligent-unit'].icon = "__pyhightechgraphics__/graphics/icons/intelligent-unit.png"
     end
 end
@@ -82,3 +88,6 @@ end
 if mods['bobmodules'] then
     require('prototypes/bobs-mods/bobmodules-compat')
 end
+
+-- After all other final-fixes: ensure bob-lab-2 accepts every pack used by Bob gold + alien bullet-line techs.
+require("prototypes/compatibility/fix-bob-lab2-research-inputs")

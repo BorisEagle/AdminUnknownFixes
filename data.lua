@@ -34,6 +34,10 @@ end
 --apm mods
 require('prototypes/apm-mods/Data')
 
+-- Normalize malformed recipe entries before any data-updates stage begins.
+-- Prevents Angel's override executor from crashing on entries without .name.
+require('functions/normalize-recipe-entries')
+
 -- Compatibility fix: reapply pypostprocessing's metatables to any recipe/technology
 -- prototype that was added via direct data.raw assignment instead of data:extend.
 -- Prevents crashes like pypetroleumhandling's py.global_item_replacer at data-updates

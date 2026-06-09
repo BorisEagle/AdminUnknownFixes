@@ -1,13 +1,13 @@
--- Normalize recipe ingredient/result entries before other mods' data-updates run.
+-- Normalize recipe ingredient/result entries before other mods' data-updates run,
+-- and expose helpers so later wrappers can normalize again when recipes are
+-- created or modified during data-updates.
 --
 -- Angel's override executor expects recipe ingredients/results to be tables with
 -- a .name field. Some compatibility paths can leave old short-form entries like
 -- {"iron-plate", 2}, or otherwise malformed entries, which then crash Angel with:
 --   __angelsrefining__/prototypes/override-functions.lua:730: table index is nil
---
--- This pass keeps valid canonical entries, converts simple short-form entries to
--- canonical Factorio 2.0-style tables, and drops only entries that have no usable
--- name at all.
+
+local raw_pairs = rawget(_G, "pairs")
 
 local function normalize_entry(entry, recipe_name, field_name)
     if not entry then
@@ -19,12 +19,13 @@ local function normalize_entry(entry, recipe_name, field_name)
         return nil
     end
 
-    -- Old short form: {"iron-plate", 2}
-    if entry[1] and entry[2] and not entry.name then
+    -- Old short form can be {"iron-plate", 2}; removal markers are often
+    -- {"iron-plate", 0}, so do not require entry[2] to be truthy in spirit.
+    if entry[1] and not entry.name then
         local normalized = {
             type = entry.type or "item",
             name = entry[1],
-            amount = entry[2]
+            amount = entry[2] or entry.amount or 0
         }
 
         if entry.probability ~= nil then normalized.probability = entry.probability end
@@ -62,7 +63,9 @@ local function normalize_list(list, recipe_name, field_name)
 
     local normalized = {}
 
-    for _, entry in pairs(list) do
+    -- Use the original pairs if available to avoid recursion through our later
+    -- global pairs wrapper.
+    for _, entry in (raw_pairs or pairs)(list) do
         local fixed = normalize_entry(entry, recipe_name, field_name)
         if fixed then
             table.insert(normalized, fixed)
@@ -81,10 +84,25 @@ local function normalize_recipe_variant(recipe, recipe_name)
     recipe.results = normalize_list(recipe.results, recipe_name, "results")
 end
 
-for recipe_name, recipe in pairs(data.raw.recipe or {}) do
+local function normalize_recipe(recipe, recipe_name)
+    if not recipe then
+        return
+    end
+
     normalize_recipe_variant(recipe, recipe_name)
     normalize_recipe_variant(recipe.normal, recipe_name .. ".normal")
     normalize_recipe_variant(recipe.expensive, recipe_name .. ".expensive")
 end
+
+local function normalize_all_recipes()
+    for recipe_name, recipe in next, data.raw.recipe or {}, nil do
+        normalize_recipe(recipe, recipe_name)
+    end
+end
+
+_G.__auf_normalize_recipe = normalize_recipe
+_G.__auf_normalize_all_recipes = normalize_all_recipes
+
+normalize_all_recipes()
 
 log("AdminUnknownFixes: recipe entry normalization completed")

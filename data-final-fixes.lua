@@ -50,6 +50,7 @@ end
 -- MERGED FROM PyPPTBaA: Global Item Replacer
 ----------------------------------------------------
 require('prototypes/global-item-replacer')
+require('functions/yuoki-legacy-recipe-compat')
 
 -- After replacer may hide items used as minable results for vanilla upgradable assemblers (Factorio 2.0 vs next_upgrade).
 require('prototypes/compatibility/fix-chemical-plant-next-upgrade')
@@ -88,6 +89,8 @@ end
 if mods['bobmodules'] then
     require('prototypes/bobs-mods/bobmodules-compat')
 end
+
+require('functions/yuoki-legacy-recipe-compat')
 
 -- After all other final-fixes: ensure bob-lab-2 accepts every pack used by Bob gold + alien bullet-line techs.
 require("prototypes/compatibility/fix-bob-lab2-research-inputs")

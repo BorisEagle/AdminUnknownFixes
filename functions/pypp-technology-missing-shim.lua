@@ -1,12 +1,10 @@
--- PyPostProcessing's prototypes/functions/compatibility/bobs.lua calls
--- TECHNOLOGY("bob-thorium-processing"):remove_prereq("uranium-processing") when
--- uranium-processing is hidden and bobplates+bobpower+bobrevamp are present.
--- Current Bob's Revamp may omit that technology, so TECHNOLOGY() errors at
--- lib/metas/technology.lua:12 ("Technology bob-thorium-processing does not exist").
+-- Return a chainable no-op TECHNOLOGY() proxy for known optional technologies
+-- that this compatibility bridge or pypostprocessing may touch without checking.
 --
--- AdminUnknownFixes loads after pypostprocessing (dependency order), so we can
--- wrap TECHNOLOGY's __call here at end of data.lua and return a chainable no-op
--- for known optional Bob's tech names that pypp touches without existence checks.
+-- Current Bob/Angel 2.0 combinations can omit or rename some technologies that
+-- older compatibility code still expects. Calling TECHNOLOGY("missing-tech")
+-- normally errors in pypostprocessing/lib/metas/technology.lua, so guard the
+-- known optional names here instead of sprinkling existence checks everywhere.
 
 if not _G.TECHNOLOGY then return end
 
@@ -26,14 +24,31 @@ local function chainable_dummy(name)
 end
 
 local missing_ok = {
+    -- Bob optional/moved technologies
     ["bob-thorium-processing"] = true,
     ["bob-deuterium-fuel-reprocessing"] = true,
+
+    -- Angel smelting technologies that may be absent/renamed in current Angel 2.0
+    -- while old Py+Angel bridge code still adds packs/prerequisites to them.
+    ["angels-solder-smelting-basic"] = true,
+    ["angels-metallurgy-1"] = true,
+    ["angels-metallurgy-2"] = true,
+    ["angels-copper-smelting-1"] = true,
+    ["angels-iron-smelting-1"] = true,
+    ["angels-lead-smelting-1"] = true,
+    ["angels-tin-smelting-1"] = true,
+    ["angels-solder-smelting-1"] = true,
+    ["angels-stone-smelting-1"] = true,
+    ["angels-glass-smelting-1"] = true,
+    ["angels-ceramic-smelting-1"] = true,
+    ["angels-iron-casting-2"] = true,
+    ["angels-copper-casting-2"] = true,
 }
 
 local orig_call = tech_mt.__call
 tech_mt.__call = function(self, technology)
     if type(technology) == "string" and not self[technology] and missing_ok[technology] then
-        log("[AdminUnknownFixes] TECHNOLOGY('" .. technology .. "') missing; no-op shim for pypostprocessing compatibility/bobs.lua")
+        log("[AdminUnknownFixes] TECHNOLOGY('" .. technology .. "') missing; returning no-op compatibility shim")
         return chainable_dummy(technology)
     end
     return orig_call(self, technology)

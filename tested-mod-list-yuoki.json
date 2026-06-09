@@ -1,0 +1,301 @@
+
+{
+  "mods": 
+  [
+    
+    {
+      "name": "base",
+      "enabled": true
+    },
+    
+    {
+      "name": "elevated-rails",
+      "enabled": false
+    },
+    
+    {
+      "name": "quality",
+      "enabled": false
+    },
+    
+    {
+      "name": "space-age",
+      "enabled": false
+    },
+    
+    {
+      "name": "AdminUnknownFixes",
+      "enabled": true
+    },
+    
+    {
+      "name": "angelsbioprocessing",
+      "enabled": true
+    },
+    
+    {
+      "name": "angelsbioprocessinggraphics",
+      "enabled": true
+    },
+    
+    {
+      "name": "angelspetrochem",
+      "enabled": true
+    },
+    
+    {
+      "name": "angelspetrochemgraphics",
+      "enabled": true
+    },
+    
+    {
+      "name": "angelsrefining",
+      "enabled": true
+    },
+    
+    {
+      "name": "angelsrefininggraphics",
+      "enabled": true
+    },
+    
+    {
+      "name": "angelssmelting",
+      "enabled": true
+    },
+    
+    {
+      "name": "angelssmeltinggraphics",
+      "enabled": true
+    },
+    
+    {
+      "name": "bobassembly",
+      "enabled": true
+    },
+    
+    {
+      "name": "bobelectronics",
+      "enabled": true
+    },
+    
+    {
+      "name": "bobinserters",
+      "enabled": true
+    },
+    
+    {
+      "name": "boblibrary",
+      "enabled": true
+    },
+    
+    {
+      "name": "boblogistics",
+      "enabled": true
+    },
+    
+    {
+      "name": "bobmining",
+      "enabled": true
+    },
+    
+    {
+      "name": "bobmodules",
+      "enabled": true
+    },
+    
+    {
+      "name": "bobores",
+      "enabled": true
+    },
+    
+    {
+      "name": "bobplates",
+      "enabled": true
+    },
+    
+    {
+      "name": "bobpower",
+      "enabled": true
+    },
+    
+    {
+      "name": "bobtech",
+      "enabled": true
+    },
+    
+    {
+      "name": "bobwarfare",
+      "enabled": true
+    },
+    
+    {
+      "name": "cybersyn",
+      "enabled": false
+    },
+    
+    {
+      "name": "DiscoScience",
+      "enabled": false
+    },
+    
+    {
+      "name": "enable-all-feature-flags",
+      "enabled": false
+    },
+    
+    {
+      "name": "far-reach",
+      "enabled": false
+    },
+    
+    {
+      "name": "flib",
+      "enabled": false
+    },
+    
+    {
+      "name": "Fluid-level-indicator",
+      "enabled": false
+    },
+    
+    {
+      "name": "FNEI",
+      "enabled": true
+    },
+    
+    {
+      "name": "inventory-repair",
+      "enabled": false
+    },
+    
+    {
+      "name": "Milestones",
+      "enabled": false
+    },
+    
+    {
+      "name": "not-enough-parameters",
+      "enabled": false
+    },
+    
+    {
+      "name": "pyalienlife",
+      "enabled": true
+    },
+    
+    {
+      "name": "pyalienlifegraphics",
+      "enabled": true
+    },
+    
+    {
+      "name": "pyalienlifegraphics2",
+      "enabled": true
+    },
+    
+    {
+      "name": "pyalienlifegraphics3",
+      "enabled": true
+    },
+    
+    {
+      "name": "pyalternativeenergy",
+      "enabled": true
+    },
+    
+    {
+      "name": "pyalternativeenergygraphics",
+      "enabled": true
+    },
+    
+    {
+      "name": "pycoalprocessing",
+      "enabled": true
+    },
+    
+    {
+      "name": "pycoalprocessinggraphics",
+      "enabled": true
+    },
+    
+    {
+      "name": "pyfusionenergy",
+      "enabled": true
+    },
+    
+    {
+      "name": "pyfusionenergygraphics",
+      "enabled": true
+    },
+    
+    {
+      "name": "pyhightech",
+      "enabled": true
+    },
+    
+    {
+      "name": "pyhightechgraphics",
+      "enabled": true
+    },
+    
+    {
+      "name": "pyindustry",
+      "enabled": true
+    },
+    
+    {
+      "name": "pyindustrygraphics",
+      "enabled": true
+    },
+    
+    {
+      "name": "pymodpack",
+      "enabled": true
+    },
+    
+    {
+      "name": "pypetroleumhandling",
+      "enabled": true
+    },
+    
+    {
+      "name": "pypetroleumhandlinggraphics",
+      "enabled": true
+    },
+    
+    {
+      "name": "pypostprocessing",
+      "enabled": true
+    },
+    
+    {
+      "name": "pyrawores",
+      "enabled": true
+    },
+    
+    {
+      "name": "pyraworesgraphics",
+      "enabled": true
+    },
+    
+    {
+      "name": "spaghetti-reborn",
+      "enabled": true
+    },
+    
+    {
+      "name": "squeak-through-2",
+      "enabled": false
+    },
+    
+    {
+      "name": "yi_engines",
+      "enabled": true
+    },
+    
+    {
+      "name": "Yuoki",
+      "enabled": true
+    }
+  ]
+}

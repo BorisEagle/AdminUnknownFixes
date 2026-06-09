@@ -222,36 +222,7 @@ if mods['angelspetrochem'] then
         --This code is by NotNotMelon
         for _, void_machine in pairs{'angels-clarifier', 'angels-flare-stack'} do
             data.raw['assembling-machine'][void_machine] = data.raw.furnace[void_machine]
-            data.raw['assembling-machine'][void_machine].type = 'assembling-machine'
-            data.raw['assembling-machine'][void_machine].crafting_speed = 1
-            data.raw['assembling-machine'][void_machine].energy_source = {
-                type = 'electric',
-                usage_priority = 'secondary-input',
-                emissions_per_minute = {pollution = 0},
-            }
-            data.raw['assembling-machine'][void_machine].energy_usage = '100kW'
-            data.raw.furnace[void_machine] = nil
         end
-
-        for name, recipe in pairs(data.raw.recipe) do
-            if recipe.category == 'angels-water-void' then
-                if recipe ~= data.raw.recipe['angels-water-void-water-saline'] then
-                    if recipe ~= data.raw.recipe['angels-water-void-water-purified'] then
-                        data.raw.recipe[name] = nil
-                    end
-                end
-            end
-        end
-        fun.tech_remove_recipe('angels-water-treatment', 'angels-clarifier')
-    
-        RECIPE('angels-clarifier'):add_unlock('angels-water-treatment-2')
-
-        RECIPE('angels-water-void-water-saline'):add_ingredient({type = "item", name = "filtration-media", amount = 1}):add_unlock('angels-water-treatment-2')
-        RECIPE('angels-water-void-water-purified'):add_ingredient({type = "item", name = "filtration-media", amount = 1}):add_unlock('angels-water-treatment-2')
-
-        TECHNOLOGY('angels-water-treatment-2'):add_prereq('angels-filtration')
-
-        data.raw['assembling-machine']['angels-clarifier'].crafting_speed = 5
     end
 end
 
@@ -264,12 +235,16 @@ if mods['angelssmelting'] then
     if mods['pyrawores'] then
         RECIPE('angels-solder-mixture'):remove_ingredient('angels-plate-lead'):add_ingredient({type = "item", name = "angels-plate-lead", amount = 4})
 
-        TECHNOLOGY('angels-solder-smelting-basic'):add_prereq('acetylene')
+        if data.raw.technology['angels-solder-smelting-basic'] then
+            TECHNOLOGY('angels-solder-smelting-basic'):add_prereq('acetylene')
+        end
 
         fun.tech_remove_recipe('solder-mk01', 'solder-0')
         fun.tech_remove_recipe('solder-mk01', 'angels-lead-plate-1')
 
-        fun.tech_add_recipe('angels-solder-smelting-basic', 'angels-lead-plate-1')
+        if data.raw.technology['angels-solder-smelting-basic'] then
+            fun.tech_add_recipe('angels-solder-smelting-basic', 'angels-lead-plate-1')
+        end
 
         data.raw.recipe['solder-0'] = nil
 
@@ -283,78 +258,10 @@ if mods['angelssmelting'] then
         TECHNOLOGY('angels-lead-smelting-1'):add_pack('py-science-pack-1')
         TECHNOLOGY('angels-tin-smelting-1'):add_pack('py-science-pack-1')
         TECHNOLOGY('angels-solder-smelting-1'):add_pack('py-science-pack-1')
-        TECHNOLOGY('angels-steel-smelting-1'):add_pack('py-science-pack-1')
-        TECHNOLOGY('angels-manganese-smelting-1'):add_pack('py-science-pack-1')
-
         TECHNOLOGY('angels-stone-smelting-1'):add_pack('py-science-pack-1')
-        TECHNOLOGY('angels-powder-metallurgy-1'):add_pack('py-science-pack-1')
-        TECHNOLOGY('angels-sulfur-processing-1'):add_pack('py-science-pack-1')
-    end
-    if mods['pyalternativeenergy'] then
-        fun.tech_remove_recipe('silicon-mk01', 'silicon')
-
-        data.raw.recipe['silicon'] = nil
-
-        TECHNOLOGY('angels-silicon-casting-2'):add_prereq('silicon-mk03')
-        TECHNOLOGY('angels-silicon-casting-2'):add_pack('production-science-pack')
-    end
-end
-
-if mods['angelsindustries'] then
-    if mods['pyalternativeenergy'] then
-        table.insert(data.raw['assembling-machine']['centrifuge-mk02'].crafting_categories, 'centrifuging-2')
-        table.insert(data.raw['assembling-machine']['centrifuge-mk03'].crafting_categories, 'centrifuging-2')
-        table.insert(data.raw['assembling-machine']['centrifuge-mk03'].crafting_categories, 'centrifuging-3')
-        table.insert(data.raw['assembling-machine']['centrifuge-mk04'].crafting_categories, 'centrifuging-2')
-        table.insert(data.raw['assembling-machine']['centrifuge-mk04'].crafting_categories, 'centrifuging-3')
-    end
-end
-
-if mods['angelsbioprocessing'] then
-    if mods['pyhightech'] then
-        if data.raw.technology["vacuum-tube-electronics"] and data.raw.technology["angels-bio-processing-green"] then
-            TECHNOLOGY("angels-bio-processing-green"):add_prereq("vacuum-tube-electronics")
-        end
-        fun.tech_merge('angels-plastic-1', 'plastics-mk02')
-        fun.tech_merge('angels-plastic-2', 'plastics-mk03')
-        fun.tech_merge('angels-plastic-3', 'plastics-mk04')
-    end
-
-    if mods['pyalienlife'] then
-        data.raw.recipe['angels-algae-green-simple'] = nil
-
-        fun.remove_recipe_unlock('angels-algae-green-simple')
-
-        if data.raw.recipe['puffer-butchery-1'] then
-            RECIPE('puffer-butchery-1'):add_result({type = "item", name = "gas-bladder", amount = 1})
-            data.raw.recipe['puffer-butchery-1'].main_product = "gas-bladder"
-        end
-    end
-    if mods['pyalternativeenergy'] then
-        RECIPE('eg-si'):add_ingredient({type = "item", name = "crystal-grindstone", amount = 1})
-    end
-end
-
-if mods['angelsexploration'] then
-    TECHNOLOGY('angels-turbo-bike'):remove_prereq('steel-processing'):add_prereq('engine')
-    RECIPE('angels-turbo-bike'):remove_ingredient('steel-plate'):add_ingredient({type = "item", name = "engine-unit", amount = 2})
-    if mods['pyalienlife'] then
-        TECHNOLOGY('angels-automobilism'):add_prereq('py-science-pack-mk01')
-    end
-end
-
-if mods['angelsaddons-storage'] then
-    fun.tech_add_recipe('py-storage-tanks', 'angels-storage-tank-3')
-    fun.tech_remove_recipe('fluid-handling', 'angels-storage-tank-3')
-    TECHNOLOGY('angels-logistic-silos'):remove_pack("py-science-pack-2"):remove_pack("chemical-science-pack")
-    TECHNOLOGY('angels-logistic-warehouses'):remove_pack("py-science-pack-2"):remove_pack("chemical-science-pack")
-    if mods['bobtech'] then
-        TECHNOLOGY('angels-logistic-silos'):remove_pack("advanced-logistic-science-pack")
-        TECHNOLOGY('angels-logistic-warehouses'):remove_pack("advanced-logistic-science-pack")
-    end  
-    if mods['pyrawores'] then
-        RECIPE('angels-storage-tank-3'):add_ingredient({type = "item", name = "pipe", amount = 15})
-        RECIPE('angels-storage-tank-3'):add_ingredient({type = "item", name = "duralumin", amount = 10})
-        RECIPE('angels-storage-tank-3'):add_ingredient({type = "item", name = "lead-plate", amount = 10})
+        TECHNOLOGY('angels-glass-smelting-1'):add_pack('py-science-pack-1')
+        TECHNOLOGY('angels-ceramic-smelting-1'):add_pack('py-science-pack-1')
+        TECHNOLOGY('angels-iron-casting-2'):add_pack('py-science-pack-1')
+        TECHNOLOGY('angels-copper-casting-2'):add_pack('py-science-pack-1')
     end
 end

@@ -30,6 +30,10 @@
 	"?bobelectronics >= 2.0.0",
 	"?bobtech >= 2.0.0",
 	"?bobmining >= 2.0.0",
+	"?Yuoki",
+	"?yi_engines",
+	"?yi_railway",
+	"?Yi_Tech_Tree",
 	"!nullius"
 	]
 }

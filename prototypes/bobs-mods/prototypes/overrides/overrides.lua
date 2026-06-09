@@ -36,10 +36,18 @@ if mods['bobgreenhouse'] then
 end
 
 if mods['bobmining'] then
-   TECHNOLOGY("bob-steel-axe-3"):add_prereq("logistic-science-pack")
-   TECHNOLOGY("bob-steel-axe-4"):add_prereq("chemical-science-pack")
-   TECHNOLOGY("bob-steel-axe-5"):add_prereq("production-science-pack")
-   TECHNOLOGY("bob-steel-axe-6"):add_prereq("utility-science-pack")
+   if data.raw.technology["bob-steel-axe-3"] then
+      TECHNOLOGY("bob-steel-axe-3"):add_prereq("logistic-science-pack")
+   end
+   if data.raw.technology["bob-steel-axe-4"] then
+      TECHNOLOGY("bob-steel-axe-4"):add_prereq("chemical-science-pack")
+   end
+   if data.raw.technology["bob-steel-axe-5"] then
+      TECHNOLOGY("bob-steel-axe-5"):add_prereq("production-science-pack")
+   end
+   if data.raw.technology["bob-steel-axe-6"] then
+      TECHNOLOGY("bob-steel-axe-6"):add_prereq("utility-science-pack")
+   end
    local steel_axe_2 = data.raw.technology["bob-steel-axe-2"]
    if mods['pyalienlife'] then
       TECHNOLOGY("bob-steel-axe-2"):add_prereq("py-science-pack-1")

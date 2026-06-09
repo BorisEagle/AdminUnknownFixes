@@ -64,22 +64,34 @@ local function rewrite_list(list)
     return changed, false, nil
 end
 
+local function rewrite_named_field(recipe, field_name)
+    local old_name = recipe[field_name]
+    local new_name = ore_name_map[old_name]
+    if not new_name then return false, false, nil end
+
+    if item_exists(new_name) then
+        log("[AdminUnknownFixes] Rewrote Yuoki legacy recipe " .. field_name .. " " .. old_name .. " -> " .. new_name)
+        recipe[field_name] = new_name
+        return true, false, old_name .. " -> " .. new_name
+    end
+
+    return false, true, old_name
+end
+
 local function rewrite_variant(recipe)
     if not recipe then return false, false, nil end
     local changed = false
 
-    if recipe.result and ore_name_map[recipe.result] then
-        local new_name = ore_name_map[recipe.result]
-        if item_exists(new_name) then
-            log("[AdminUnknownFixes] Rewrote Yuoki legacy recipe result " .. recipe.result .. " -> " .. new_name)
-            recipe.result = new_name
-            changed = true
-        else
-            return changed, true, recipe.result
-        end
-    end
+    local field_changed, missing_target, note = rewrite_named_field(recipe, "result")
+    if missing_target then return changed, true, note end
+    changed = changed or field_changed
 
-    local list_changed, missing_target, note = rewrite_list(recipe.ingredients)
+    field_changed, missing_target, note = rewrite_named_field(recipe, "main_product")
+    if missing_target then return changed, true, note end
+    changed = changed or field_changed
+
+    local list_changed
+    list_changed, missing_target, note = rewrite_list(recipe.ingredients)
     if missing_target then return changed, true, note end
     changed = changed or list_changed
 

@@ -38,9 +38,8 @@ require('prototypes/apm-mods/Data')
 -- Prevents Angel's override executor from crashing on entries without .name.
 require('functions/normalize-recipe-entries')
 
--- Remove recipes that still reference missing item/fluid prototypes, e.g. old
--- Yuoki/Bob bridge recipes pointing at removed Bob ore item names.
-require('functions/prune-invalid-recipes')
+-- Disable known invalid Yuoki bridge recipes that reference old Bob item names.
+require('functions/yuoki-legacy-recipe-compat')
 
 -- Wrap Angel's OV helpers so recipe patches queued later in data-updates are
 -- normalized before Angel executes them.

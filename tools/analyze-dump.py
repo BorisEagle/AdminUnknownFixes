@@ -188,6 +188,7 @@ def main() -> int:
     ingredient_edges: list[tuple[str, str]] = []
     product_edges: list[tuple[str, str]] = []
     bad_recipe_refs: list[dict[str, Any]] = []
+    consumer_by_ingredient: dict[str, set[str]] = defaultdict(set)
 
     for recipe_name, recipe in sorted(recipes.items()):
         ingredients = recipe_ingredients(recipe)
@@ -207,6 +208,7 @@ def main() -> int:
             if product not in valid_products:
                 bad_recipe_refs.append({"recipe": recipe_name, "field": "product", "name": product})
         for ingredient in ingredients:
+            consumer_by_ingredient[ingredient].add(recipe_name)
             ingredient_edges.append((ingredient, recipe_name))
             if ingredient not in valid_products:
                 bad_recipe_refs.append({"recipe": recipe_name, "field": "ingredient", "name": ingredient})
@@ -234,16 +236,21 @@ def main() -> int:
     no_known_producer = []
     for ingredient in sorted({edge[0] for edge in ingredient_edges}):
         if ingredient not in producer_by_product and ingredient not in INTRINSIC_SOURCES:
+            consumers = sorted(consumer_by_ingredient.get(ingredient, set()))
             no_known_producer.append({
                 "item_or_fluid": ingredient,
                 "prototype_type": "fluid" if ingredient in fluids else item_type_by_name.get(ingredient, "unknown"),
+                "consumer_count": len(consumers),
+                "consuming_recipes": ";".join(consumers[:25]),
             })
+
+    no_known_producer.sort(key=lambda row: (-int(row["consumer_count"]), row["item_or_fluid"]))
 
     write_csv(out / "recipes.csv", recipe_rows, ["recipe", "category", "enabled", "ingredients", "products"])
     write_csv(out / "technologies.csv", tech_rows, ["technology", "prerequisites", "unlocks"])
     write_csv(out / "bad-recipe-references.csv", bad_recipe_refs, ["recipe", "field", "name"])
     write_csv(out / "bad-technology-references.csv", bad_tech_refs, ["technology", "field", "name"])
-    write_csv(out / "items-without-known-producer.csv", no_known_producer, ["item_or_fluid", "prototype_type"])
+    write_csv(out / "items-without-known-producer.csv", no_known_producer, ["item_or_fluid", "prototype_type", "consumer_count", "consuming_recipes"])
 
     with (out / "research-tree.dot").open("w", encoding="utf-8") as f:
         f.write("digraph research_tree {\n")

@@ -18,9 +18,67 @@ from pathlib import Path
 from typing import Any, Iterable
 
 
+ITEM_LIKE_TYPES = {
+    "item",
+    "ammo",
+    "armor",
+    "blueprint",
+    "blueprint-book",
+    "capsule",
+    "copy-paste-tool",
+    "deconstruction-item",
+    "gun",
+    "item-with-entity-data",
+    "item-with-inventory",
+    "item-with-label",
+    "item-with-tags",
+    "module",
+    "rail-planner",
+    "repair-tool",
+    "selection-tool",
+    "space-platform-starter-pack",
+    "spidertron-remote",
+    "tool",
+    "upgrade-item",
+}
+
+
+INTRINSIC_SOURCES = {
+    # Environment / map generation / vanilla conceptual sources. This list is small on purpose.
+    "coal",
+    "copper-ore",
+    "crude-oil",
+    "iron-ore",
+    "stone",
+    "uranium-ore",
+    "water",
+    "wood",
+}
+
+
 def load_json(path: Path) -> dict[str, Any]:
     with path.open("r", encoding="utf-8") as f:
         return json.load(f)
+
+
+def collect_item_like_names(data: dict[str, Any]) -> tuple[set[str], dict[str, str]]:
+    """Return all names that can legally appear as item products/ingredients.
+
+    Factorio dump groups item subclasses under their prototype type, not only under
+    data.raw.item. Recipes can use modules, tools/science packs, ammo, capsules,
+    armor, guns, rail planners, etc. Counting only data.raw.item creates thousands
+    of fake errors. Yes, of course the obvious field name was not enough.
+    """
+    names: set[str] = set()
+    name_to_type: dict[str, str] = {}
+    for type_name in ITEM_LIKE_TYPES:
+        prototypes = data.get(type_name)
+        if not isinstance(prototypes, dict):
+            continue
+        for name in prototypes.keys():
+            names.add(name)
+            name_to_type[name] = type_name
+    return names, name_to_type
 
 
 def recipe_variants(recipe: dict[str, Any]) -> Iterable[dict[str, Any]]:
@@ -41,14 +99,6 @@ def entry_name(entry: Any) -> str | None:
     if isinstance(entry, list) and entry:
         return entry[0]
     return None
-
-
-def entry_amount(entry: Any) -> Any:
-    if isinstance(entry, dict):
-        return entry.get("amount") or entry.get("amount_min") or entry.get("probability") or ""
-    if isinstance(entry, list) and len(entry) > 1:
-        return entry[1]
-    return ""
 
 
 def iter_recipe_entries(recipe: dict[str, Any], key: str) -> Iterable[Any]:
@@ -113,13 +163,13 @@ def main() -> int:
     out = args.out
     out.mkdir(parents=True, exist_ok=True)
 
-    items: set[str] = set(data.get("item", {}).keys())
+    item_like, item_type_by_name = collect_item_like_names(data)
     fluids: set[str] = set(data.get("fluid", {}).keys())
     recipes: dict[str, dict[str, Any]] = data.get("recipe", {})
     technologies: dict[str, dict[str, Any]] = data.get("technology", {})
     resources: dict[str, dict[str, Any]] = data.get("resource", {})
 
-    valid_products = items | fluids
+    valid_products = item_like | fluids
 
     producer_by_product: dict[str, set[str]] = defaultdict(set)
     for resource_name, resource in resources.items():
@@ -183,14 +233,17 @@ def main() -> int:
 
     no_known_producer = []
     for ingredient in sorted({edge[0] for edge in ingredient_edges}):
-        if ingredient not in producer_by_product and ingredient not in {"wood", "coal", "stone", "iron-ore", "copper-ore", "water", "crude-oil"}:
-            no_known_producer.append({"item_or_fluid": ingredient})
+        if ingredient not in producer_by_product and ingredient not in INTRINSIC_SOURCES:
+            no_known_producer.append({
+                "item_or_fluid": ingredient,
+                "prototype_type": "fluid" if ingredient in fluids else item_type_by_name.get(ingredient, "unknown"),
+            })
 
     write_csv(out / "recipes.csv", recipe_rows, ["recipe", "category", "enabled", "ingredients", "products"])
     write_csv(out / "technologies.csv", tech_rows, ["technology", "prerequisites", "unlocks"])
     write_csv(out / "bad-recipe-references.csv", bad_recipe_refs, ["recipe", "field", "name"])
     write_csv(out / "bad-technology-references.csv", bad_tech_refs, ["technology", "field", "name"])
-    write_csv(out / "items-without-known-producer.csv", no_known_producer, ["item_or_fluid"])
+    write_csv(out / "items-without-known-producer.csv", no_known_producer, ["item_or_fluid", "prototype_type"])
 
     with (out / "research-tree.dot").open("w", encoding="utf-8") as f:
         f.write("digraph research_tree {\n")
@@ -209,7 +262,7 @@ def main() -> int:
         f.write("}\n")
 
     summary = {
-        "items": len(items),
+        "item_like_prototypes": len(item_like),
         "fluids": len(fluids),
         "recipes": len(recipes),
         "technologies": len(technologies),

@@ -42,7 +42,7 @@ require('functions/normalize-recipe-entries')
 require('functions/yuoki-legacy-recipe-compat')
 
 -- Add primitive hand-sorting recipes for initial Angel crushed ores.
-require('prototypes/compatibility/fix-early-primitive-ore-sorting')
+require('prototypes/compatibility/fix-early-primitive-ore-sorting-v2')
 
 -- Wrap Angel's OV helpers so recipe patches queued later in data-updates are
 -- normalized before Angel executes them.

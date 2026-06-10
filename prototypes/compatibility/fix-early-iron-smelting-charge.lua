@@ -6,14 +6,13 @@ local function has_recipe(name)
   return data.raw.recipe and data.raw.recipe[name]
 end
 
-local function add_item(name, label, icon)
+local function add_item(name, label, icons)
   if not has_item(name) then
     data:extend({{
       type='item',
       name=name,
       localised_name={'',label},
-      icon=icon,
-      icon_size=64,
+      icons=icons,
       subgroup='raw-material',
       order='a[' .. name .. ']',
       stack_size=100,
@@ -57,12 +56,22 @@ local function add_plate_recipe(add, metal, plate, charge)
   end
 end
 
+local iron_charge_icons = {
+  {icon='__base__/graphics/icons/iron-ore.png', icon_size=64},
+  {icon='__base__/graphics/icons/stone.png', icon_size=64, scale=0.35, shift={8, 8}},
+}
+
+local copper_charge_icons = {
+  {icon='__base__/graphics/icons/copper-ore.png', icon_size=64},
+  {icon='__base__/graphics/icons/stone.png', icon_size=64, scale=0.35, shift={8, 8}},
+}
+
 if has_item('iron-ore') then
-  add_item('auf-iron-smelting-charge', 'Primitive iron smelting charge', '__base__/graphics/icons/iron-ore.png')
+  add_item('auf-iron-smelting-charge', 'Primitive iron smelting charge', iron_charge_icons)
 end
 
 if has_item('copper-ore') then
-  add_item('auf-copper-smelting-charge', 'Primitive copper smelting charge', '__base__/graphics/icons/copper-ore.png')
+  add_item('auf-copper-smelting-charge', 'Primitive copper smelting charge', copper_charge_icons)
 end
 
 local crushed_ores = {

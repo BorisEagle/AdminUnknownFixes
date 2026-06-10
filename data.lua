@@ -44,8 +44,11 @@ require('functions/yuoki-legacy-recipe-compat')
 -- Add primitive hand-sorting recipes for initial Angel crushed ores.
 require('prototypes/compatibility/fix-early-primitive-ore-sorting-v2')
 
--- Let the starting stone furnace run two-input early smelting recipes.
+-- Keep the old furnace hook loaded as a no-op after Factorio rejected larger source inventories.
 require('prototypes/compatibility/fix-early-stone-furnace-smelting')
+
+-- Add a one-slot smelting charge path for early iron plates.
+require('prototypes/compatibility/fix-early-iron-smelting-charge')
 
 -- Wrap Angel's OV helpers so recipe patches queued later in data-updates are
 -- normalized before Angel executes them.

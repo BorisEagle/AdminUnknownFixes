@@ -3,6 +3,10 @@ data:extend(
 --RESOURCE CATEGORIES
 
 --RECIPE CATEGORIES
+  {
+    type = "recipe-category",
+    name = "auf-hand-sorting",
+  },
   --REFINING
   --[[
   {

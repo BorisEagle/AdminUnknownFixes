@@ -56,6 +56,18 @@ INTRINSIC_SOURCES = {
 }
 
 
+SINK_RECIPE_SUFFIXES = (
+    "-pyvoid",
+    "-void",
+    "-sink",
+    "-recycling",
+)
+
+SINK_RECIPE_NAMES = {
+    "used-nuclear-fuel",
+}
+
+
 def load_json(path: Path) -> dict[str, Any]:
     with path.open("r", encoding="utf-8") as f:
         return json.load(f)
@@ -79,6 +91,10 @@ def collect_item_like_names(data: dict[str, Any]) -> tuple[set[str], dict[str, s
             names.add(name)
             name_to_type[name] = type_name
     return names, name_to_type
+
+
+def is_sink_recipe(recipe_name: str) -> bool:
+    return recipe_name in SINK_RECIPE_NAMES or recipe_name.endswith(SINK_RECIPE_SUFFIXES)
 
 
 def recipe_variants(recipe: dict[str, Any]) -> Iterable[dict[str, Any]]:
@@ -233,24 +249,32 @@ def main() -> int:
             if recipe not in recipes:
                 bad_tech_refs.append({"technology": tech_name, "field": "unlock", "name": recipe})
 
-    no_known_producer = []
+    no_known_producer: list[dict[str, Any]] = []
+    no_known_producer_sink_only: list[dict[str, Any]] = []
     for ingredient in sorted({edge[0] for edge in ingredient_edges}):
-        if ingredient not in producer_by_product and ingredient not in INTRINSIC_SOURCES:
-            consumers = sorted(consumer_by_ingredient.get(ingredient, set()))
-            no_known_producer.append({
-                "item_or_fluid": ingredient,
-                "prototype_type": "fluid" if ingredient in fluids else item_type_by_name.get(ingredient, "unknown"),
-                "consumer_count": len(consumers),
-                "consuming_recipes": ";".join(consumers[:25]),
-            })
+        if ingredient in producer_by_product or ingredient in INTRINSIC_SOURCES:
+            continue
+        consumers = sorted(consumer_by_ingredient.get(ingredient, set()))
+        row = {
+            "item_or_fluid": ingredient,
+            "prototype_type": "fluid" if ingredient in fluids else item_type_by_name.get(ingredient, "unknown"),
+            "consumer_count": len(consumers),
+            "consuming_recipes": ";".join(consumers[:25]),
+        }
+        if consumers and all(is_sink_recipe(recipe_name) for recipe_name in consumers):
+            no_known_producer_sink_only.append(row)
+        else:
+            no_known_producer.append(row)
 
     no_known_producer.sort(key=lambda row: (-int(row["consumer_count"]), row["item_or_fluid"]))
+    no_known_producer_sink_only.sort(key=lambda row: (-int(row["consumer_count"]), row["item_or_fluid"]))
 
     write_csv(out / "recipes.csv", recipe_rows, ["recipe", "category", "enabled", "ingredients", "products"])
     write_csv(out / "technologies.csv", tech_rows, ["technology", "prerequisites", "unlocks"])
     write_csv(out / "bad-recipe-references.csv", bad_recipe_refs, ["recipe", "field", "name"])
     write_csv(out / "bad-technology-references.csv", bad_tech_refs, ["technology", "field", "name"])
     write_csv(out / "items-without-known-producer.csv", no_known_producer, ["item_or_fluid", "prototype_type", "consumer_count", "consuming_recipes"])
+    write_csv(out / "sink-only-items-without-known-producer.csv", no_known_producer_sink_only, ["item_or_fluid", "prototype_type", "consumer_count", "consuming_recipes"])
 
     with (out / "research-tree.dot").open("w", encoding="utf-8") as f:
         f.write("digraph research_tree {\n")
@@ -276,7 +300,8 @@ def main() -> int:
         "resources": len(resources),
         "bad_recipe_references": len(bad_recipe_refs),
         "bad_technology_references": len(bad_tech_refs),
-        "items_or_fluids_without_known_producer": len(no_known_producer),
+        "blocking_items_or_fluids_without_known_producer": len(no_known_producer),
+        "sink_only_items_or_fluids_without_known_producer": len(no_known_producer_sink_only),
     }
     (out / "summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
 

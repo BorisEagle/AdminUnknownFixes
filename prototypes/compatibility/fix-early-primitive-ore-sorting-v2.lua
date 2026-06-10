@@ -1,10 +1,10 @@
 local specs = {
-  {n='auf-primitive-saphirite-sorting', l={'', 'Primitive saphirite hand sorting'}, i='angels-ore1-crushed', r={{'angels-slag',1,nil},{'iron-ore',1,0.25},{'copper-ore',1,0.10}}},
-  {n='auf-primitive-jivolite-sorting', l={'', 'Primitive jivolite hand sorting'}, i='angels-ore2-crushed', r={{'angels-slag',1,nil},{'iron-ore',1,0.25},{'copper-ore',1,0.10}}},
-  {n='auf-primitive-stiratite-sorting', l={'', 'Primitive stiratite hand sorting'}, i='angels-ore3-crushed', r={{'angels-slag',1,nil},{'iron-ore',1,0.20},{'copper-ore',1,0.12}}},
-  {n='auf-primitive-crotinnium-sorting', l={'', 'Primitive crotinnium hand sorting'}, i='angels-ore4-crushed', r={{'angels-slag',1,nil},{'iron-ore',1,0.20},{'copper-ore',1,0.12}}},
-  {n='auf-primitive-rubyte-sorting', l={'', 'Primitive rubyte hand sorting'}, i='angels-ore5-crushed', r={{'angels-slag',1,nil},{'bob-lead-ore',1,0.18},{'bob-nickel-ore',1,0.08}}},
-  {n='auf-primitive-bobmonium-sorting', l={'', 'Primitive bobmonium hand sorting'}, i='angels-ore6-crushed', r={{'angels-slag',1,nil},{'bob-tin-ore',1,0.18},{'bob-quartz',1,0.08}}},
+  {n='auf-primitive-saphirite-sorting', l={'', 'Primitive saphirite hand sorting'}, i='angels-ore1-crushed', r={{'angels-slag',1,nil},{'iron-ore',1,0.20},{'copper-ore',1,0.10}}},
+  {n='auf-primitive-jivolite-sorting', l={'', 'Primitive jivolite hand sorting'}, i='angels-ore2-crushed', r={{'angels-slag',1,nil},{'iron-ore',1,0.20},{'copper-ore',1,0.10}}},
+  {n='auf-primitive-stiratite-sorting', l={'', 'Primitive stiratite hand sorting'}, i='angels-ore3-crushed', r={{'angels-slag',1,nil},{'copper-ore',1,0.20},{'iron-ore',1,0.10}}},
+  {n='auf-primitive-crotinnium-sorting', l={'', 'Primitive crotinnium hand sorting'}, i='angels-ore4-crushed', r={{'angels-slag',1,nil},{'copper-ore',1,0.20},{'iron-ore',1,0.10}}},
+  {n='auf-primitive-rubyte-sorting', l={'', 'Primitive rubyte hand sorting'}, i='angels-ore5-crushed', r={{'angels-slag',1,nil},{'bob-lead-ore',1,0.20},{'bob-nickel-ore',1,0.10}}},
+  {n='auf-primitive-bobmonium-sorting', l={'', 'Primitive bobmonium hand sorting'}, i='angels-ore6-crushed', r={{'angels-slag',1,nil},{'bob-tin-ore',1,0.20},{'bob-quartz',1,0.10}}},
 }
 
 local function get_item(name)

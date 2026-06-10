@@ -41,6 +41,9 @@ require('functions/normalize-recipe-entries')
 -- Disable known invalid Yuoki bridge recipes that reference old Bob item names.
 require('functions/yuoki-legacy-recipe-compat')
 
+-- Add primitive hand-sorting recipes for initial Angel crushed ores.
+require('prototypes/compatibility/fix-early-primitive-ore-sorting')
+
 -- Wrap Angel's OV helpers so recipe patches queued later in data-updates are
 -- normalized before Angel executes them.
 require('functions/fix-angels-ov-entry-normalization')

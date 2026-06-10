@@ -1,0 +1,229 @@
+#!/usr/bin/env python3
+"""Analyze Factorio --dump-data output for large modpack compatibility testing.
+
+Input:  data-raw-dump.json from Factorio script-output
+Output: reports with technologies, recipes, missing producers, and graph source files.
+
+This is intentionally conservative: it does not try to prove full progression yet.
+It finds obvious prototype graph problems that are worth checking in gameplay.
+"""
+
+from __future__ import annotations
+
+import argparse
+import csv
+import json
+from collections import defaultdict
+from pathlib import Path
+from typing import Any, Iterable
+
+
+def load_json(path: Path) -> dict[str, Any]:
+    with path.open("r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def recipe_variants(recipe: dict[str, Any]) -> Iterable[dict[str, Any]]:
+    yielded = False
+    if isinstance(recipe.get("normal"), dict):
+        yielded = True
+        yield recipe["normal"]
+    if isinstance(recipe.get("expensive"), dict):
+        yielded = True
+        yield recipe["expensive"]
+    if not yielded:
+        yield recipe
+
+
+def entry_name(entry: Any) -> str | None:
+    if isinstance(entry, dict):
+        return entry.get("name") or entry.get("1")
+    if isinstance(entry, list) and entry:
+        return entry[0]
+    return None
+
+
+def entry_amount(entry: Any) -> Any:
+    if isinstance(entry, dict):
+        return entry.get("amount") or entry.get("amount_min") or entry.get("probability") or ""
+    if isinstance(entry, list) and len(entry) > 1:
+        return entry[1]
+    return ""
+
+
+def iter_recipe_entries(recipe: dict[str, Any], key: str) -> Iterable[Any]:
+    for variant in recipe_variants(recipe):
+        value = variant.get(key)
+        if isinstance(value, list):
+            yield from value
+        elif isinstance(value, dict):
+            yield value
+
+
+def recipe_results(recipe_name: str, recipe: dict[str, Any]) -> list[str]:
+    out: list[str] = []
+    for variant in recipe_variants(recipe):
+        if isinstance(variant.get("results"), list):
+            for entry in variant["results"]:
+                name = entry_name(entry)
+                if name:
+                    out.append(name)
+        elif isinstance(variant.get("result"), str):
+            out.append(variant["result"])
+        elif isinstance(recipe.get("main_product"), str):
+            out.append(recipe["main_product"])
+    return sorted(set(out))
+
+
+def recipe_ingredients(recipe: dict[str, Any]) -> list[str]:
+    out: list[str] = []
+    for entry in iter_recipe_entries(recipe, "ingredients"):
+        name = entry_name(entry)
+        if name:
+            out.append(name)
+    return sorted(set(out))
+
+
+def tech_unlocks(tech: dict[str, Any]) -> list[str]:
+    out: list[str] = []
+    for effect in tech.get("effects") or []:
+        if isinstance(effect, dict) and effect.get("type") == "unlock-recipe" and effect.get("recipe"):
+            out.append(effect["recipe"])
+    return sorted(set(out))
+
+
+def write_csv(path: Path, rows: list[dict[str, Any]], fields: list[str]) -> None:
+    with path.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fields)
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def dot_quote(value: str) -> str:
+    return '"' + value.replace('\\', '\\\\').replace('"', '\\"') + '"'
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("dump", type=Path, help="Path to data-raw-dump.json")
+    parser.add_argument("--out", type=Path, default=Path("analysis-output"), help="Output directory")
+    args = parser.parse_args()
+
+    data = load_json(args.dump)
+    out = args.out
+    out.mkdir(parents=True, exist_ok=True)
+
+    items: set[str] = set(data.get("item", {}).keys())
+    fluids: set[str] = set(data.get("fluid", {}).keys())
+    recipes: dict[str, dict[str, Any]] = data.get("recipe", {})
+    technologies: dict[str, dict[str, Any]] = data.get("technology", {})
+    resources: dict[str, dict[str, Any]] = data.get("resource", {})
+
+    valid_products = items | fluids
+
+    producer_by_product: dict[str, set[str]] = defaultdict(set)
+    for resource_name, resource in resources.items():
+        minable = resource.get("minable") or {}
+        for entry_key in ("results", "result"):
+            value = minable.get(entry_key)
+            if isinstance(value, str):
+                producer_by_product[value].add(f"resource:{resource_name}")
+            elif isinstance(value, list):
+                for entry in value:
+                    name = entry_name(entry)
+                    if name:
+                        producer_by_product[name].add(f"resource:{resource_name}")
+
+    recipe_rows: list[dict[str, Any]] = []
+    ingredient_edges: list[tuple[str, str]] = []
+    product_edges: list[tuple[str, str]] = []
+    bad_recipe_refs: list[dict[str, Any]] = []
+
+    for recipe_name, recipe in sorted(recipes.items()):
+        ingredients = recipe_ingredients(recipe)
+        products = recipe_results(recipe_name, recipe)
+        category = recipe.get("category", "crafting")
+        enabled = recipe.get("enabled", "")
+        recipe_rows.append({
+            "recipe": recipe_name,
+            "category": category,
+            "enabled": enabled,
+            "ingredients": ";".join(ingredients),
+            "products": ";".join(products),
+        })
+        for product in products:
+            producer_by_product[product].add(f"recipe:{recipe_name}")
+            product_edges.append((recipe_name, product))
+            if product not in valid_products:
+                bad_recipe_refs.append({"recipe": recipe_name, "field": "product", "name": product})
+        for ingredient in ingredients:
+            ingredient_edges.append((ingredient, recipe_name))
+            if ingredient not in valid_products:
+                bad_recipe_refs.append({"recipe": recipe_name, "field": "ingredient", "name": ingredient})
+
+    tech_rows: list[dict[str, Any]] = []
+    bad_tech_refs: list[dict[str, Any]] = []
+    tech_edges: list[tuple[str, str]] = []
+
+    for tech_name, tech in sorted(technologies.items()):
+        prereqs = sorted(tech.get("prerequisites") or [])
+        unlocks = tech_unlocks(tech)
+        tech_rows.append({
+            "technology": tech_name,
+            "prerequisites": ";".join(prereqs),
+            "unlocks": ";".join(unlocks),
+        })
+        for prereq in prereqs:
+            tech_edges.append((prereq, tech_name))
+            if prereq not in technologies:
+                bad_tech_refs.append({"technology": tech_name, "field": "prerequisite", "name": prereq})
+        for recipe in unlocks:
+            if recipe not in recipes:
+                bad_tech_refs.append({"technology": tech_name, "field": "unlock", "name": recipe})
+
+    no_known_producer = []
+    for ingredient in sorted({edge[0] for edge in ingredient_edges}):
+        if ingredient not in producer_by_product and ingredient not in {"wood", "coal", "stone", "iron-ore", "copper-ore", "water", "crude-oil"}:
+            no_known_producer.append({"item_or_fluid": ingredient})
+
+    write_csv(out / "recipes.csv", recipe_rows, ["recipe", "category", "enabled", "ingredients", "products"])
+    write_csv(out / "technologies.csv", tech_rows, ["technology", "prerequisites", "unlocks"])
+    write_csv(out / "bad-recipe-references.csv", bad_recipe_refs, ["recipe", "field", "name"])
+    write_csv(out / "bad-technology-references.csv", bad_tech_refs, ["technology", "field", "name"])
+    write_csv(out / "items-without-known-producer.csv", no_known_producer, ["item_or_fluid"])
+
+    with (out / "research-tree.dot").open("w", encoding="utf-8") as f:
+        f.write("digraph research_tree {\n")
+        f.write("  rankdir=LR;\n")
+        for src, dst in tech_edges:
+            f.write(f"  {dot_quote(src)} -> {dot_quote(dst)};\n")
+        f.write("}\n")
+
+    with (out / "production-graph.dot").open("w", encoding="utf-8") as f:
+        f.write("digraph production_graph {\n")
+        f.write("  rankdir=LR;\n")
+        for item, recipe in ingredient_edges:
+            f.write(f"  {dot_quote(item)} -> {dot_quote('recipe:' + recipe)};\n")
+        for recipe, product in product_edges:
+            f.write(f"  {dot_quote('recipe:' + recipe)} -> {dot_quote(product)};\n")
+        f.write("}\n")
+
+    summary = {
+        "items": len(items),
+        "fluids": len(fluids),
+        "recipes": len(recipes),
+        "technologies": len(technologies),
+        "resources": len(resources),
+        "bad_recipe_references": len(bad_recipe_refs),
+        "bad_technology_references": len(bad_tech_refs),
+        "items_or_fluids_without_known_producer": len(no_known_producer),
+    }
+    (out / "summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
+
+    print(json.dumps(summary, indent=2))
+    print(f"Reports written to {out}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

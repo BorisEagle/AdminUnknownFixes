@@ -1,10 +1,10 @@
 local specs = {
-  {n='auf-primitive-stiratite-sorting', i='angels-ore1-crushed', r={{'angels-slag',1,nil},{'iron-ore',1,0.25},{'copper-ore',1,0.10}}},
-  {n='auf-primitive-saphirite-sorting', i='angels-ore2-crushed', r={{'angels-slag',1,nil},{'iron-ore',1,0.25},{'copper-ore',1,0.10}}},
-  {n='auf-primitive-jivolite-sorting', i='angels-ore3-crushed', r={{'angels-slag',1,nil},{'iron-ore',1,0.20},{'copper-ore',1,0.12}}},
-  {n='auf-primitive-crotinnium-sorting', i='angels-ore4-crushed', r={{'angels-slag',1,nil},{'iron-ore',1,0.20},{'copper-ore',1,0.12}}},
-  {n='auf-primitive-rubyte-sorting', i='angels-ore5-crushed', r={{'angels-slag',1,nil},{'bob-lead-ore',1,0.18},{'bob-nickel-ore',1,0.08}}},
-  {n='auf-primitive-bobmonium-sorting', i='angels-ore6-crushed', r={{'angels-slag',1,nil},{'bob-tin-ore',1,0.18},{'bob-quartz',1,0.08}}},
+  {n='auf-primitive-stiratite-sorting', l='Primitive stiratite hand sorting', i='angels-ore1-crushed', r={{'angels-slag',1,nil},{'iron-ore',1,0.25},{'copper-ore',1,0.10}}},
+  {n='auf-primitive-saphirite-sorting', l='Primitive saphirite hand sorting', i='angels-ore2-crushed', r={{'angels-slag',1,nil},{'iron-ore',1,0.25},{'copper-ore',1,0.10}}},
+  {n='auf-primitive-jivolite-sorting', l='Primitive jivolite hand sorting', i='angels-ore3-crushed', r={{'angels-slag',1,nil},{'iron-ore',1,0.20},{'copper-ore',1,0.12}}},
+  {n='auf-primitive-crotinnium-sorting', l='Primitive crotinnium hand sorting', i='angels-ore4-crushed', r={{'angels-slag',1,nil},{'iron-ore',1,0.20},{'copper-ore',1,0.12}}},
+  {n='auf-primitive-rubyte-sorting', l='Primitive rubyte hand sorting', i='angels-ore5-crushed', r={{'angels-slag',1,nil},{'bob-lead-ore',1,0.18},{'bob-nickel-ore',1,0.08}}},
+  {n='auf-primitive-bobmonium-sorting', l='Primitive bobmonium hand sorting', i='angels-ore6-crushed', r={{'angels-slag',1,nil},{'bob-tin-ore',1,0.18},{'bob-quartz',1,0.08}}},
 }
 
 local function get_item(name)
@@ -36,6 +36,16 @@ local function set_icon(recipe, source_name)
   end
 end
 
+local character = data.raw.character and data.raw.character.character
+if character then
+  character.crafting_categories = character.crafting_categories or {'crafting'}
+  local found = false
+  for _, category in pairs(character.crafting_categories) do
+    if category == 'auf-hand-sorting' then found = true end
+  end
+  if not found then table.insert(character.crafting_categories, 'auf-hand-sorting') end
+end
+
 local add = {}
 for _, s in pairs(specs) do
   local results = make_results(s.r)
@@ -43,8 +53,9 @@ for _, s in pairs(specs) do
     local recipe = {
       type='recipe',
       name=s.n,
+      localised_name=s.l,
       enabled=true,
-      category='crafting',
+      category='auf-hand-sorting',
       energy_required=4,
       ingredients={{type='item', name=s.i, amount=5}},
       results=results,

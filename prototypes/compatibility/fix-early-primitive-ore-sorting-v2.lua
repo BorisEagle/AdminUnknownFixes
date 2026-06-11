@@ -1,10 +1,10 @@
 local specs = {
-  {n='auf-primitive-saphirite-sorting', l={'', 'Primitive saphirite hand sorting'}, i='angels-ore1-crushed', r={{'angels-slag',1,nil},{'iron-ore',1,0.20},{'copper-ore',1,0.10}}},
-  {n='auf-primitive-jivolite-sorting', l={'', 'Primitive jivolite hand sorting'}, i='angels-ore2-crushed', r={{'angels-slag',1,nil},{'iron-ore',1,0.20},{'copper-ore',1,0.10}}},
-  {n='auf-primitive-stiratite-sorting', l={'', 'Primitive stiratite hand sorting'}, i='angels-ore3-crushed', r={{'angels-slag',1,nil},{'copper-ore',1,0.20},{'iron-ore',1,0.10}}},
-  {n='auf-primitive-crotinnium-sorting', l={'', 'Primitive crotinnium hand sorting'}, i='angels-ore4-crushed', r={{'angels-slag',1,nil},{'copper-ore',1,0.20},{'iron-ore',1,0.10}}},
-  {n='auf-primitive-rubyte-sorting', l={'', 'Primitive rubyte hand sorting'}, i='angels-ore5-crushed', r={{'angels-slag',1,nil},{'bob-lead-ore',1,0.20},{'bob-nickel-ore',1,0.10}}},
-  {n='auf-primitive-bobmonium-sorting', l={'', 'Primitive bobmonium hand sorting'}, i='angels-ore6-crushed', r={{'angels-slag',1,nil},{'bob-tin-ore',1,0.20},{'bob-quartz',1,0.10}}},
+  {n='auf-primitive-saphirite-sorting', l={'', 'Primitive saphirite hand sorting'}, i='angels-ore1-crushed', r={{'angels-slag',7},{'iron-ore',2},{'copper-ore',1}}},
+  {n='auf-primitive-jivolite-sorting', l={'', 'Primitive jivolite hand sorting'}, i='angels-ore2-crushed', r={{'angels-slag',7},{'iron-ore',2},{'copper-ore',1}}},
+  {n='auf-primitive-stiratite-sorting', l={'', 'Primitive stiratite hand sorting'}, i='angels-ore3-crushed', r={{'angels-slag',7},{'copper-ore',2},{'iron-ore',1}}},
+  {n='auf-primitive-crotinnium-sorting', l={'', 'Primitive crotinnium hand sorting'}, i='angels-ore4-crushed', r={{'angels-slag',7},{'copper-ore',2},{'iron-ore',1}}},
+  {n='auf-primitive-rubyte-sorting', l={'', 'Primitive rubyte hand sorting'}, i='angels-ore5-crushed', r={{'angels-slag',7},{'bob-lead-ore',2},{'bob-nickel-ore',1}}},
+  {n='auf-primitive-bobmonium-sorting', l={'', 'Primitive bobmonium hand sorting'}, i='angels-ore6-crushed', r={{'angels-slag',7},{'bob-tin-ore',2},{'bob-quartz',1}}},
 }
 
 local function get_item(name)
@@ -15,9 +15,7 @@ local function make_results(rows)
   local out = {}
   for _, row in pairs(rows) do
     if not get_item(row[1]) then return nil end
-    local entry = {type='item', name=row[1], amount=row[2]}
-    if row[3] then entry.probability = row[3] end
-    out[#out + 1] = entry
+    out[#out + 1] = {type='item', name=row[1], amount=row[2]}
   end
   return out
 end
@@ -57,7 +55,7 @@ for _, s in pairs(specs) do
       enabled=true,
       category='auf-hand-sorting',
       energy_required=4,
-      ingredients={{type='item', name=s.i, amount=5}},
+      ingredients={{type='item', name=s.i, amount=10}},
       results=results,
       allow_productivity=false,
       always_show_products=true,

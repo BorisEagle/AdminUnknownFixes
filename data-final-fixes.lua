@@ -60,6 +60,9 @@ require('prototypes/compatibility/fix-chemical-plant-next-upgrade')
 ----------------------------------------------------
 require('prototypes/ingredient-deduplicator')
 
+-- Reapply after final-fixes ingredient mutations and deduplication.
+require('prototypes/compatibility/fix-early-ore-sorting-facility')
+
 ----------------------------------------------------
 -- MERGED FROM PyPPTBaA: Icon fixes
 ----------------------------------------------------

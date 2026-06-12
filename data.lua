@@ -50,6 +50,9 @@ require('prototypes/compatibility/fix-early-stone-furnace-smelting')
 -- Add a one-slot smelting charge path for early iron plates.
 require('prototypes/compatibility/fix-early-iron-smelting-charge')
 
+-- Replace late circuit boards in the first Angel ore sorter with early Py inductors.
+require('prototypes/compatibility/fix-early-ore-sorting-facility')
+
 -- Wrap Angel's OV helpers so recipe patches queued later in data-updates are
 -- normalized before Angel executes them.
 require('functions/fix-angels-ov-entry-normalization')

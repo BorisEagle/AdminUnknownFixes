@@ -4,9 +4,13 @@
 -- board requirement that belongs much later than the first ore sorting step.
 -- Replace that specific 12-board requirement with 36 Air-core inductors.
 
-local recipe = data.raw.recipe and data.raw.recipe['angels-ore-sorting-facility']
+local recipe_names = {
+  'angels-ore-sorting-facility',
+  'ore-sorting-facility',
+}
 
 local simple_circuit_board_names = {
+  ['electronic-circuit'] = true,
   ['basic-circuit-board'] = true,
   ['bob-basic-circuit-board'] = true,
   ['circuit-board'] = true,
@@ -34,8 +38,13 @@ local function patch_ingredients(ingredients)
   end
 end
 
-if recipe and data.raw.item and data.raw.item['inductor1'] then
-  patch_ingredients(recipe.ingredients)
-  if recipe.normal then patch_ingredients(recipe.normal.ingredients) end
-  if recipe.expensive then patch_ingredients(recipe.expensive.ingredients) end
+if data.raw.recipe and data.raw.item and data.raw.item['inductor1'] then
+  for _, recipe_name in pairs(recipe_names) do
+    local recipe = data.raw.recipe[recipe_name]
+    if recipe then
+      patch_ingredients(recipe.ingredients)
+      if recipe.normal then patch_ingredients(recipe.normal.ingredients) end
+      if recipe.expensive then patch_ingredients(recipe.expensive.ingredients) end
+    end
+  end
 end
